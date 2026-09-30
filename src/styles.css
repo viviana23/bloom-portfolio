@@ -1,0 +1,502 @@
+@import "tailwindcss";
+
+/*
+ * Bloom Portfolio — sistema visual.
+ * Colores sólidos desde `portfolio.config.ts` (theme):
+ *   --bg, --fg, --accent, --accent-fg, --muted, --border
+ *   --block-1…4 (colores de bloque) y --on-block-1…4 (texto legible encima)
+ * Sin degradados: color blocking, formas suaves y stickers.
+ */
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-surface: var(--surface);
+  --color-block-1: var(--block-1);
+  --color-block-2: var(--block-2);
+  --color-block-3: var(--block-3);
+  --color-block-4: var(--block-4);
+  --color-on-block-1: var(--on-block-1);
+  --color-on-block-2: var(--on-block-2);
+  --color-on-block-3: var(--on-block-3);
+  --color-on-block-4: var(--on-block-4);
+
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: var(--font-display);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+:root {
+  /* Superficie: el fondo, apenas teñido con la tinta. Sólido, sin mezclas visibles. */
+  --surface: color-mix(in srgb, var(--fg) 4%, var(--bg));
+  --header-h: 5rem;
+
+  /*
+   * Estilo "divertido" (por defecto). Los otros estilos cambian estas variables.
+   * --bw: grosor de borde · --round: multiplicador de redondeo · --tilt: giros
+   * --pop: sombra de sticker · --lift: cuánto "salta" al pasar el cursor
+   */
+  --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+  --display-weight: 500;
+  --soft: 100;
+  --display-tracking: -0.035em;
+  --em-family: var(--font-display);
+  --em-style: italic;
+  --em-weight: 400;
+  --bw: 2px;
+  /* Color de los bordes: tinta en "divertido", un tono suave en los demás. */
+  --line: var(--fg);
+  --line-current: currentColor;
+  --round: 1;
+  --tilt: 1;
+  --lift: -2px;
+  --pop: 4px 4px 0 0 var(--fg);
+  --pop-lg: 6px 6px 0 0 var(--fg);
+  --pop-xl: 8px 8px 0 0 var(--fg);
+  --arch-top: 999px;
+}
+
+/* Estilo "elegante": líneas finas, sin sombras ni giros, serif clásica. */
+[data-style="elegante"] {
+  --display-weight: 380;
+  --soft: 0;
+  --display-tracking: -0.025em;
+  --em-weight: 300;
+  --bw: 1px;
+  --line: color-mix(in srgb, var(--fg) 16%, transparent);
+  --line-current: color-mix(in srgb, currentColor 28%, transparent);
+  --round: 0.55;
+  --tilt: 0;
+  --lift: 0px;
+  --pop: 0 0 0 0 transparent;
+  --pop-lg: 0 0 0 0 transparent;
+  --pop-xl: 0 30px 80px -40px color-mix(in srgb, var(--fg) 35%, transparent);
+}
+
+/* Estilo "minimal": sobrio, tipografía sans, sin decoraciones. */
+[data-style="minimal"] {
+  --font-display: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --display-weight: 600;
+  --soft: 0;
+  --display-tracking: -0.045em;
+  --em-family: inherit;
+  --em-style: normal;
+  --em-weight: 600;
+  --bw: 1px;
+  --line: color-mix(in srgb, var(--fg) 11%, transparent);
+  --line-current: color-mix(in srgb, currentColor 22%, transparent);
+  --round: 0.35;
+  --tilt: 0;
+  --lift: 0px;
+  --pop: 0 0 0 0 transparent;
+  --pop-lg: 0 0 0 0 transparent;
+  --pop-xl: 0 30px 80px -40px color-mix(in srgb, var(--fg) 35%, transparent);
+  --arch-top: calc(1.75rem * 0.35);
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--fg);
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    min-height: 100dvh;
+  }
+
+  a,
+  button {
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-fg);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  [data-theme="dark"] img:not([data-keep-bright]) {
+    filter: brightness(0.92);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: 78rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 48rem) {
+    .container-page {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* ── Tipografía ─────────────────────────────────────────────── */
+  .text-display {
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-variation-settings: "SOFT" var(--soft);
+    line-height: 0.95;
+    letter-spacing: var(--display-tracking);
+  }
+  .text-title {
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-variation-settings: "SOFT" var(--soft);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .text-display em,
+  .text-title em,
+  .rich em {
+    font-family: var(--em-family);
+    font-style: var(--em-style);
+    font-weight: var(--em-weight);
+    font-variation-settings: "SOFT" var(--soft);
+    color: var(--accent);
+  }
+  .rich em {
+    font-size: 1.06em;
+  }
+  .on-color em {
+    color: inherit;
+  }
+  .text-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── Botones ────────────────────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: 3.25rem;
+    padding: 0 1.6rem;
+    border-radius: 999px;
+    border: var(--bw) solid var(--line);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1;
+    box-shadow: var(--pop);
+    transition:
+      transform 0.2s var(--ease-out-soft),
+      box-shadow 0.2s var(--ease-out-soft),
+      background-color 0.2s,
+      color 0.2s;
+  }
+  .btn:hover {
+    transform: translate(var(--lift), var(--lift));
+    box-shadow: var(--pop-lg);
+  }
+  .btn:active {
+    transform: translate(calc(var(--lift) * -1.5), calc(var(--lift) * -1.5)) scale(0.98);
+    box-shadow: 0 0 0 0 transparent;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--accent-fg);
+  }
+  .btn-secondary {
+    background: var(--bg);
+    color: var(--fg);
+  }
+
+  /* Enlace con subrayado de acento que crece */
+  .link-underline {
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-size: 0% 2px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.35s var(--ease-out-soft);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 2px;
+  }
+
+  .hairline {
+    border-color: var(--border);
+  }
+
+  /* ── Stickers y etiquetas ───────────────────────────────────── */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2rem;
+    padding: 0 0.9rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .sticker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.6rem 1.05rem;
+    border-radius: 999px;
+    border: var(--bw) solid var(--line);
+    box-shadow: var(--pop);
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: transform 0.45s var(--ease-spring);
+  }
+  .sticker:hover {
+    transform: rotate(0deg) scale(1.06) !important;
+  }
+
+  /* Tarjeta de color que "salta" al pasar el cursor */
+  .tile {
+    border-radius: calc(1.75rem * var(--round));
+    transition:
+      transform 0.35s var(--ease-out-soft),
+      box-shadow 0.35s var(--ease-out-soft);
+  }
+  .tile-pop:hover,
+  .tile-pop:focus-within {
+    transform: translate(calc(var(--lift) * 1.5), calc(var(--lift) * 1.5));
+    box-shadow: var(--pop-lg);
+  }
+
+  /* Arco para la foto o el monograma */
+  .arch {
+    border-radius: var(--arch-top) var(--arch-top) calc(1.75rem * var(--round)) calc(1.75rem * var(--round));
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* ── Movimiento ─────────────────────────────────────────────── */
+  @keyframes hero-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+  .js .hero-item {
+    animation: hero-in 0.8s var(--ease-out-soft) both;
+    animation-delay: var(--d, 0ms);
+  }
+
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.6) rotate(var(--r, 0deg));
+    }
+  }
+  .js .pop-in {
+    animation: pop-in 0.7s var(--ease-spring) both;
+    animation-delay: var(--d, 0ms);
+  }
+
+  /* El sello solo gira mientras pasas el cursor por la foto: nada se mueve solo para siempre. */
+  .js .spin-slow {
+    animation: spin 26s linear infinite;
+    animation-play-state: paused;
+  }
+  .portrait:hover .spin-slow {
+    animation-play-state: running;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+  }
+  .js .marquee-track {
+    animation: marquee 38s linear infinite;
+  }
+  .marquee:hover .marquee-track,
+  .marquee.is-paused .marquee-track {
+    animation-play-state: paused;
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.7s var(--ease-out-soft),
+      transform 0.7s var(--ease-out-soft);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  @media print, (prefers-reduced-motion: reduce) {
+    .js .reveal {
+      opacity: 1;
+      transform: none;
+    }
+    .js .spin-slow,
+    .js .marquee-track {
+      animation: none !important;
+    }
+  }
+
+  /* Botón flotante: pegado al borde derecho de la pantalla */
+  .floating-contact {
+    right: 1rem;
+    bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+  @media (min-width: 48rem) {
+    .floating-contact {
+      right: 1.5rem;
+      bottom: 1.5rem;
+    }
+  }
+
+  /* ── Diálogo (proyecto y menú móvil) ────────────────────────── */
+  .project-dialog {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    background: var(--bg);
+    color: var(--fg);
+    border: 0;
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.3s var(--ease-out-soft),
+      transform 0.4s var(--ease-out-soft),
+      overlay 0.4s allow-discrete,
+      display 0.4s allow-discrete;
+  }
+  .project-dialog[open] {
+    opacity: 1;
+    transform: none;
+  }
+  @starting-style {
+    .project-dialog[open] {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+  }
+  .project-dialog::backdrop {
+    background: var(--fg);
+    opacity: 0;
+    transition:
+      opacity 0.3s,
+      overlay 0.3s allow-discrete,
+      display 0.3s allow-discrete;
+  }
+  .project-dialog[open]::backdrop {
+    opacity: 0.55;
+  }
+  @starting-style {
+    .project-dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
+  @media (min-width: 48rem) {
+    .project-dialog.is-panel {
+      margin: auto;
+      width: min(100% - 4rem, 62rem);
+      height: calc(100dvh - 4rem);
+      max-height: calc(100dvh - 4rem);
+      border-radius: calc(1.75rem * var(--round));
+      border: var(--bw) solid var(--line);
+      box-shadow: var(--pop-xl);
+    }
+  }
+}
+
+/*
+ * ── Decoraciones según el estilo ─────────────────────────────
+ * Fuera de las capas (@layer) para que tengan prioridad sobre las utilidades.
+ */
+[data-style="minimal"] .decor,
+[data-style="minimal"] .decor-playful,
+[data-style="elegante"] .decor-playful {
+  display: none;
+}
+[data-style="elegante"] .marquee-band {
+  border-radius: 0;
+  border-block: 1px solid var(--border);
+  border-inline: 0;
+  border-color: var(--border);
+  background: transparent;
+  color: var(--fg);
+}
+[data-style="elegante"] .marquee-band svg {
+  color: var(--accent);
+}
+[data-style="minimal"] .marquee-band {
+  display: none;
+}
+
+/* El botón secundario conserva un borde legible en los estilos suaves. */
+[data-style="elegante"] .btn-secondary,
+[data-style="minimal"] .btn-secondary {
+  border-color: color-mix(in srgb, var(--fg) 38%, transparent);
+}
+[data-style="elegante"] .marquee-toggle {
+  border: 1px solid var(--border);
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-toggle {
+    display: none;
+  }
+}
