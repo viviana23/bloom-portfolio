@@ -4,7 +4,7 @@
 
 Todo tu contenido vive en un solo archivo: `portfolio.config.ts`. No hace falta tocar componentes, estilos ni HTML.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FUSUARIO_GITHUB%2Fbloom-portfolio&project-name=mi-portfolio&repository-name=mi-portfolio)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fviviana23%2Fbloom-portfolio&project-name=mi-portfolio&repository-name=mi-portfolio)
 
 **¿No programas?** Sigue el **[manual paso a paso](docs/MANUAL.md)**: en 30 minutos tienes tu portfolio publicado, gratis y sin instalar nada.
 

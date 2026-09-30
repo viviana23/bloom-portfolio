@@ -43,7 +43,7 @@ Bloom es una iniciativa de [Qodira](https://www.qodira.com/es/bloom). Esta guía
 ## Paso 2 · Crea tu copia y publícala (un solo botón)
 
 1. Entra a la página de la plantilla en GitHub:
-   **[github.com/USUARIO_GITHUB/bloom-portfolio](https://github.com/USUARIO_GITHUB/bloom-portfolio)**
+   **[github.com/viviana23/bloom-portfolio](https://github.com/viviana23/bloom-portfolio)**
 2. Baja hasta el botón negro **Deploy with Vercel** y haz clic.
 3. Vercel te pide entrar: elige **Continue with GitHub** y acepta los permisos.
 4. Ponle un nombre a tu proyecto, por ejemplo `portfolio-camila`, y haz clic en **Create**.
