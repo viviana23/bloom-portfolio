@@ -349,6 +349,15 @@ export default definePortfolio({
   //   style:   "divertido" · "elegante" · "minimal"
   //   palette: "fresa" · "salvia" · "arena" · "lavanda" · "tinta"
   // Cada paleta trae su versión clara y oscura.
+  // ¿No sabes cuál elegir? Algunas combinaciones según tu profesión
+  // (la tabla completa está en docs/MANUAL.md, paso 8):
+  //   Repostera, belleza ............ divertido + fresa
+  //   Ilustradora, contenido ........ divertido + lavanda
+  //   Bodas, coaching ............... elegante  + arena
+  //   Yoga, bienestar, florista ..... elegante  + salvia
+  //   Fotógrafa, tecnología ......... minimal   + tinta
+  //   Psicóloga, terapeuta .......... minimal   + salvia
+  //   Abogada, arquitecta ........... minimal   + arena
   theme: {
     style: "divertido",
     palette: "fresa",

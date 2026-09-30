@@ -134,7 +134,28 @@ theme: {
 | `lavanda` | Lavanda y tonos creativos | Ilustración, diseño, educación, contenido |
 | `tinta` | Negro y terracota | Fotografía, moda, consultoría, tecnología |
 
-Cualquier estilo funciona con cualquier paleta. Por ejemplo, una fotógrafa podría usar `minimal` + `tinta` y una coach, `elegante` + `salvia`.
+Cualquier estilo funciona con cualquier paleta. Estas son nuestras recomendaciones según la profesión:
+
+| Si eres… | Estilo | Paleta | Por qué funciona |
+|----------|--------|--------|------------------|
+| Repostera, pastelera, chocolatera | `divertido` | `fresa` | Alegre y antojable, como una vitrina de dulces |
+| Chef, cocina saludable, catering | `divertido` | `salvia` | Fresco y natural, con sabor a ingredientes de temporada |
+| Maquilladora, manicurista, estética | `divertido` | `fresa` | Cercano y con mucha personalidad, ideal para mostrar antes y después |
+| Ilustradora, artista, tatuadora | `divertido` | `lavanda` | Creativo y juguetón, deja que tus colores brillen |
+| Creadora de contenido, community manager, marketing | `divertido` | `lavanda` | Moderno y con energía, se ve bien en redes |
+| Artesana, joyería, hecho a mano | `divertido` | `arena` | Cálido y con textura, transmite oficio |
+| Profesora, educación infantil, talleres | `divertido` | `salvia` | Amable y tranquilo, genera confianza en las familias |
+| Wedding planner, organizadora de eventos | `elegante` | `arena` | Sofisticado y atemporal, habla de detalle y calma |
+| Florista, decoradora | `elegante` | `salvia` | Natural y delicado, como un ramo bien armado |
+| Instructora de yoga, bienestar, nutricionista | `elegante` | `salvia` | Sereno, respira |
+| Coach, mentora, consultora de imagen | `elegante` | `arena` | Cálido y profesional a la vez |
+| Estilista, diseñadora de moda | `elegante` | `tinta` | Editorial, con aire de revista |
+| Fotógrafa, videógrafa | `minimal` | `tinta` | Neutro, para que tus fotos sean las protagonistas |
+| Diseñadora gráfica, diseñadora UX/UI | `minimal` | `lavanda` | Limpio, con un toque de creatividad |
+| Desarrolladora, analista de datos, tecnología | `minimal` | `tinta` | Sobrio y directo, muy profesional |
+| Psicóloga, terapeuta | `minimal` | `salvia` | Tranquilo y cuidado, sin distracciones |
+| Arquitecta, interiorista | `minimal` | `arena` | Ordenado y cálido, como un buen espacio |
+| Abogada, contadora, consultora | `minimal` | `arena` | Serio y confiable, sin frialdad |
 
 **¿Quieres ajustar un color?** Escribe solo ese color y se aplica encima de la paleta:
 
