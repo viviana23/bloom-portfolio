@@ -11,7 +11,8 @@
     "check": "tsc --noEmit",
     "build:runtime": "vite build -c vite.runtime.config.ts",
     "dev:editor": "vite build -c vite.runtime.config.ts && vite -c vite.editor.config.ts",
-    "build:editor": "vite build -c vite.runtime.config.ts && vite build -c vite.editor.config.ts"
+    "build:editor": "vite build -c vite.runtime.config.ts && vite build -c vite.editor.config.ts",
+    "build:editor:qodira": "vite build -c vite.runtime.config.ts && BLOOM_EDITOR_BASE=/bloom-editor/ vite build -c vite.editor.config.ts && rm -rf ../project-landing-page-QODIRA/public/bloom-editor && cp -R dist-editor ../project-landing-page-QODIRA/public/bloom-editor"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",

@@ -6,7 +6,7 @@ Todo tu contenido vive en un solo archivo: `portfolio.config.ts`. No hace falta 
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fviviana23%2Fbloom-portfolio&project-name=mi-portfolio&repository-name=mi-portfolio)
 
-**¿No programas?** Sigue el **[manual paso a paso](docs/MANUAL.md)**: en 30 minutos tienes tu portfolio publicado, gratis y sin instalar nada.
+**¿No programas?** Usa el **[Editor de Bloom](https://www.qodira.com/bloom-editor)**: llenas un formulario, ves tu portfolio en vivo y lo descargas listo para publicar en Netlify, sin código. También puedes seguir el **[manual paso a paso](docs/MANUAL.md)**.
 
 ---
 
@@ -278,3 +278,18 @@ Las fotos de la demo son de [Unsplash](https://unsplash.com) y se usan bajo la [
 ## Licencia
 
 [MIT](LICENSE): puedes usar, copiar, modificar y publicar esta plantilla gratis, también para tu negocio. Solo conserva el aviso de autoría del archivo `LICENSE`. Si mantienes la línea "Hecho con Bloom, una iniciativa de Qodira" al final de tu portfolio, nos ayudas a que más mujeres la encuentren.
+
+---
+
+## Para desarrolladoras: el editor
+
+El Editor de Bloom vive en `editor/` y reutiliza los componentes de la plantilla:
+
+```bash
+npm run dev:editor            # editor en http://localhost:5174
+npm run build:editor          # dist-editor/
+npm run build:editor:qodira   # lo publica dentro de la web de Qodira (public/bloom-editor)
+```
+
+- `src/runtime.tsx` es el portfolio que lee su contenido incrustado en la página. El editor empaqueta ese runtime, el `index.html` pre-renderizado y las fotos optimizadas en un `.zip`.
+- `src/lib/site.ts` reúne las reglas que comparten la plantilla y el editor: validación en español, SEO y colores.

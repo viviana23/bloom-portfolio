@@ -6,6 +6,20 @@ Bloom es una iniciativa de [Qodira](https://www.qodira.com/es/bloom). Esta guía
 
 ---
 
+## La forma más fácil: el Editor de Bloom
+
+**¿No quieres tocar código ni crear cuentas técnicas?** Usa el editor:
+
+1. Entra a **[qodira.com/bloom-editor](https://www.qodira.com/bloom-editor)**.
+2. Elige a qué te dedicas, llena tus datos y sube tus fotos. Ves tu portfolio en vivo mientras escribes.
+3. En el último paso, toca **Descargar mi portfolio**, descomprime la carpeta y arrástrala a **[app.netlify.com/drop](https://app.netlify.com/drop)**.
+
+Listo: tu portfolio queda publicado, gratis. Tu avance se guarda en tu navegador para que puedas volver a editarlo.
+
+El resto de este manual explica el **camino con GitHub**, para quien quiera editar el código directamente.
+
+---
+
 ## Antes de empezar
 
 **Vas a necesitar:**
