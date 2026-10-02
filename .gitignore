@@ -1,7 +1,9 @@
 node_modules
 dist
+dist-editor
 .ssr
 .DS_Store
 *.local
 .claude-flow
 .claude
+editor/public/runtime

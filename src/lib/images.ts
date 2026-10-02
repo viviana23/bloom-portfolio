@@ -14,9 +14,19 @@ export function variantPath(src: string, width: number): string {
   return src.replace(/\.(jpe?g|png)$/i, `-${width}.webp`);
 }
 
-/** Atributos srcSet/sizes para una foto local (solo en producción). */
+let srcsetEnabled = Boolean(import.meta.env?.PROD);
+
+/**
+ * Activa o desactiva las versiones optimizadas. La vista previa del editor las
+ * desactiva (todavía no existen); un portfolio descargado del editor las activa.
+ */
+export function setSrcsetEnabled(enabled: boolean) {
+  srcsetEnabled = enabled;
+}
+
+/** Atributos srcSet/sizes para una foto local (solo si existen sus versiones WebP). */
 export function responsive(src: string, sizes: string): { srcSet?: string; sizes?: string } {
-  if (!import.meta.env.PROD || !LOCAL_RASTER.test(src) || src.endsWith("og-image.png")) return {};
+  if (!srcsetEnabled || !LOCAL_RASTER.test(src) || src.endsWith("og-image.png")) return {};
   return {
     srcSet: IMAGE_WIDTHS.map((w) => `${variantPath(src, w)} ${w}w`).join(", "),
     sizes,

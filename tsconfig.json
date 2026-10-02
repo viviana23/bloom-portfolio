@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
@@ -14,7 +18,18 @@
     "noEmit": true,
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
-    "types": ["vite/client", "node"]
+    "types": [
+      "vite/client",
+      "node"
+    ]
   },
-  "include": ["src", "scripts", "portfolio.config.ts", "vite.config.ts"]
+  "include": [
+    "src",
+    "scripts",
+    "editor/src",
+    "portfolio.config.ts",
+    "vite.config.ts",
+    "vite.runtime.config.ts",
+    "vite.editor.config.ts"
+  ]
 }

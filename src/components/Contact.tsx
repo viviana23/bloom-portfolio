@@ -39,6 +39,8 @@ export function Contact() {
   const { contact, person, links } = config;
   const ref = useReveal<HTMLDivElement>();
   const cta = contact?.cta ?? contactLink();
+  // La tarjeta solo aparece si hay algo que mostrar (email, botón o redes).
+  const hasCard = Boolean(person.email || cta || links.length > 0);
 
   return (
     <div className="px-2 pb-2 pt-3 md:px-4 md:pb-4">
@@ -59,6 +61,7 @@ export function Contact() {
               {contact?.text && <p className="mt-8 max-w-xl text-lg leading-relaxed opacity-85">{contact.text}</p>}
             </div>
 
+            {hasCard && (
             <div className="relative lg:col-span-5">
               {contact?.photo && (
                 <figure
@@ -91,12 +94,13 @@ export function Contact() {
                   </SmartLink>
                 )}
                 {links.length > 0 && (
-                  <div className="border-t-[length:var(--bw)] border-fg/10 pt-6">
+                  <div className={person.email || cta ? "border-t-[length:var(--bw)] border-fg/10 pt-6" : ""}>
                     <SocialLinks links={links} />
                   </div>
                 )}
               </div>
             </div>
+            )}
           </div>
         </section>
         <SiteFooter />

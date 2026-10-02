@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+/* Colores de la interfaz del editor (marca Qodira Bloom) */
+@theme {
+  --color-brand: #7c3aed;
+  --color-brand-dark: #6d28d9;
+  --color-ink: #1f1530;
+  --color-line: #e7e3ef;
+  --color-paper: #faf8fd;
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Fraunces Variable", Georgia, serif;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: var(--color-paper);
+}
+:focus-visible {
+  outline: 3px solid var(--color-brand);
+  outline-offset: 2px;
+}
+button {
+  cursor: pointer;
+}

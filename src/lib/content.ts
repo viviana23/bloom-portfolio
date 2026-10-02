@@ -152,8 +152,11 @@ export function createContent(config: PortfolioConfig) {
         return Boolean(config.services?.items.length);
       case "testimonials":
         return Boolean(config.testimonials?.items.length);
-      case "about":
-        return Boolean(config.about && (config.about.text.length > 0 || config.about.points?.length));
+      case "about": {
+        const text = config.about?.text ?? "";
+        const hasText = Array.isArray(text) ? text.some((t) => t.trim()) : text.trim() !== "";
+        return Boolean(config.about && (hasText || config.about.points?.length));
+      }
       case "skills":
         return Boolean(config.skills?.groups.some((g) => g.items.length > 0));
       case "lab":

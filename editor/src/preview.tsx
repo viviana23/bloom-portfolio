@@ -1,0 +1,69 @@
+/**
+ * Vista previa en vivo: recibe la configuración del editor (postMessage)
+ * y dibuja el portfolio con los mismos componentes de la plantilla.
+ */
+import { createRoot } from "react-dom/client";
+import "@fontsource-variable/fraunces/soft.css";
+import "@fontsource-variable/fraunces/soft-italic.css";
+import "@fontsource-variable/geist";
+import "../../src/styles.css";
+import { App } from "../../src/App";
+import { ContentProvider, createContent } from "../../src/lib/content";
+import { setSrcsetEnabled } from "../../src/lib/images";
+import { paletteCss } from "../../src/lib/site";
+import { resolveTheme } from "../../src/lib/themes";
+import type { PortfolioConfig } from "../../src/lib/types";
+
+export type PreviewMessage =
+  | { type: "config"; config: PortfolioConfig; images: Record<string, string> }
+  | { type: "scrollTo"; anchor: string };
+
+setSrcsetEnabled(false);
+const root = createRoot(document.getElementById("root")!);
+let userPickedTheme = false;
+
+/** Reemplaza "/fotos/x.jpg" por la foto subida (blob:) para verla sin publicar. */
+function withImages(config: PortfolioConfig, images: Record<string, string>): PortfolioConfig {
+  return JSON.parse(JSON.stringify(config), (key, value) =>
+    (key === "src" || key === "ogImage") && typeof value === "string" && images[value] ? images[value] : value,
+  );
+}
+
+function render(config: PortfolioConfig, images: Record<string, string>) {
+  const theme = resolveTheme(config.theme);
+  const html = document.documentElement;
+  html.lang = config.site.lang;
+  html.dataset.style = theme.style;
+  if (!userPickedTheme) {
+    const dark =
+      theme.defaultMode === "dark" ||
+      (theme.defaultMode === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+    html.dataset.theme = dark ? "dark" : "light";
+  }
+  document.getElementById("bloom-theme")!.textContent =
+    `:root,[data-theme="light"]{${paletteCss(theme.light)};color-scheme:light}` +
+    `[data-theme="dark"]{${paletteCss(theme.dark)};color-scheme:dark}`;
+  root.render(
+    <ContentProvider content={createContent(withImages(config, images))}>
+      <App />
+    </ContentProvider>,
+  );
+}
+
+// Si la persona usa el botón de tema dentro de la vista previa, respetamos su elección.
+document.addEventListener("click", (e) => {
+  if ((e.target as Element).closest("header button[aria-label^='Cambiar']")) userPickedTheme = true;
+});
+
+window.addEventListener("message", (e: MessageEvent<PreviewMessage>) => {
+  if (e.origin !== location.origin) return;
+  const msg = e.data;
+  if (msg.type === "config") render(msg.config, msg.images);
+  if (msg.type === "scrollTo") {
+    const el = msg.anchor === "inicio" ? document.body : document.getElementById(msg.anchor);
+    if (msg.anchor === "inicio") scrollTo({ top: 0, behavior: "smooth" });
+    else el?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+});
+
+window.parent.postMessage({ type: "preview-ready" }, location.origin);

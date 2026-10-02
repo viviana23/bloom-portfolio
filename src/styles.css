@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Detecta las clases de los componentes también cuando se usa desde el editor. */
+@source "./";
+
 /*
  * Bloom Portfolio — sistema visual.
  * Colores sólidos desde `portfolio.config.ts` (theme):

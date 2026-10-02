@@ -8,7 +8,10 @@
     "dev": "vite",
     "build": "vite build && vite build --ssr src/entry-server.tsx --outDir .ssr && node scripts/prerender.js",
     "preview": "vite preview",
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit",
+    "build:runtime": "vite build -c vite.runtime.config.ts",
+    "dev:editor": "vite build -c vite.runtime.config.ts && vite -c vite.editor.config.ts",
+    "build:editor": "vite build -c vite.runtime.config.ts && vite build -c vite.editor.config.ts"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",
@@ -22,6 +25,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.1",
+    "fflate": "^0.8.3",
     "sharp": "^0.35.5",
     "tailwindcss": "^4.3.3",
     "typescript": "~5.9.3",
