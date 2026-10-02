@@ -1,4 +1,5 @@
-import { config, contactLink, labels } from "../lib/content";
+import { useContent } from "../lib/content";
+import type { LabItem } from "../lib/types";
 import { responsive } from "../lib/images";
 import { useReveal } from "../lib/hooks";
 import { ArrowRight, Sparkle } from "./Icons";
@@ -8,6 +9,7 @@ const blockStyle = (n: number) => ({ background: `var(--block-${n})`, color: `va
 
 /* ── Sobre mí: bento ──────────────────────────────────────────── */
 export function About() {
+  const { config, labels } = useContent();
   const about = config.about!;
   const { person } = config;
   const paragraphs = Array.isArray(about.text) ? about.text : [about.text];
@@ -82,6 +84,7 @@ export function About() {
 
 /* ── Habilidades: mosaicos de color ───────────────────────────── */
 export function Skills() {
+  const { config, labels } = useContent();
   const skills = config.skills!;
   const groups = skills.groups.filter((g) => g.items.length > 0);
   return (
@@ -108,7 +111,7 @@ export function Skills() {
 }
 
 /* ── Laboratorio ──────────────────────────────────────────────── */
-function LabCard({ item, index }: { item: NonNullable<typeof config.lab>["items"][number]; index: number }) {
+function LabCard({ item, index }: { item: LabItem; index: number }) {
   const ref = useReveal<HTMLLIElement>();
   const ongoing = item.status && /curso|progress|progreso|andamento/i.test(item.status);
   return (
@@ -153,6 +156,7 @@ function LabCard({ item, index }: { item: NonNullable<typeof config.lab>["items"
 }
 
 export function Lab() {
+  const { config, contactLink, labels } = useContent();
   const lab = config.lab!;
   const cta = contactLink(lab.lookingFor);
   return (
@@ -195,6 +199,7 @@ export function Lab() {
 
 /* ── Experiencia: línea de tiempo sobre tinta ─────────────────── */
 export function Experience() {
+  const { config, labels } = useContent();
   const exp = config.experience!;
   return (
     <Section id="experience" title={exp.title ?? labels.titleExperience} band="ink">
@@ -235,6 +240,7 @@ export function Experience() {
 
 /* ── Formación ────────────────────────────────────────────────── */
 export function Education() {
+  const { config, labels } = useContent();
   const edu = config.education!;
   const certs = edu.certifications ?? [];
   return (

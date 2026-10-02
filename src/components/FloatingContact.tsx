@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { config, contactLink, labels, sectionAnchor } from "../lib/content";
+import { sectionAnchor, useContent } from "../lib/content";
 import { Mail, WhatsApp } from "./Icons";
 
 /**
@@ -7,6 +7,7 @@ import { Mail, WhatsApp } from "./Icons";
  * Aparece después del hero y se esconde al llegar a la sección de contacto.
  */
 export function FloatingContact() {
+  const { config, contactLink, labels } = useContent();
   const link = contactLink();
   const [visible, setVisible] = useState(false);
 

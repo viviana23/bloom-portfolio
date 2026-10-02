@@ -1,7 +1,7 @@
-import config from "../../portfolio.config.ts";
-import type { Labels, Project, SectionId } from "./types.ts";
+import { createContext, createElement, useContext, type ReactNode } from "react";
+import type { Labels, PortfolioConfig, Project, SectionId } from "./types.ts";
 
-const defaultLabels: Labels = {
+export const defaultLabels: Labels = {
   skipToContent: "Saltar al contenido",
   menu: "Menú",
   closeMenu: "Cerrar menú",
@@ -75,12 +75,10 @@ export const CREDIT = {
   qodira: { name: "Qodira", url: `https://www.qodira.com/?${UTM}` },
 };
 
-export const labels: Labels = { ...defaultLabels, ...config.labels };
-
 export function slugify(text: string): string {
   return text
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
@@ -88,11 +86,6 @@ export function slugify(text: string): string {
 }
 
 export type ResolvedProject = Project & { slug: string };
-
-export const projects: ResolvedProject[] = (config.projects?.items ?? []).map((p) => ({
-  ...p,
-  slug: p.slug ? slugify(p.slug) : slugify(p.title),
-}));
 
 /** Ancla (id del DOM) de cada sección. */
 export const sectionAnchor: Record<SectionId, string> = {
@@ -107,57 +100,6 @@ export const sectionAnchor: Record<SectionId, string> = {
   education: "formacion",
   contact: "contacto",
 };
-
-/** Una sección se muestra si está en `sections` y tiene contenido. */
-function hasContent(id: SectionId): boolean {
-  switch (id) {
-    case "projects":
-      return projects.length > 0;
-    case "gallery":
-      return Boolean(config.gallery?.items.length);
-    case "services":
-      return Boolean(config.services?.items.length);
-    case "testimonials":
-      return Boolean(config.testimonials?.items.length);
-    case "about":
-      return Boolean(config.about && (config.about.text.length > 0 || config.about.points?.length));
-    case "skills":
-      return Boolean(config.skills?.groups.some((g) => g.items.length > 0));
-    case "lab":
-      return Boolean(config.lab && (config.lab.items.length || config.lab.lookingFor));
-    case "experience":
-      return Boolean(config.experience?.items.length);
-    case "education":
-      return Boolean(config.education?.items.length || config.education?.certifications?.length);
-    case "contact":
-      return true;
-  }
-}
-
-/** Secciones activadas (`true`) en `sections`, en su orden, que además tienen contenido. */
-export const visibleSections: SectionId[] = (Object.entries(config.sections) as [SectionId, boolean | undefined][])
-  .filter(([id, on]) => on === true && hasContent(id))
-  .map(([id]) => id);
-
-/** Secciones activadas pero sin contenido (para avisar al compilar). */
-export const emptySections: SectionId[] = (Object.entries(config.sections) as [SectionId, boolean | undefined][])
-  .filter(([id, on]) => on === true && !hasContent(id))
-  .map(([id]) => id);
-
-/**
- * ¿El enlace lleva a algún lado? Un ancla ("#servicios") a una sección oculta no.
- * Así, si ocultas una sección, los botones que apuntan a ella desaparecen solos.
- */
-export function linkIsAvailable(url: string): boolean {
-  if (!url.startsWith("#")) return true;
-  const id = (Object.keys(sectionAnchor) as SectionId[]).find((k) => `#${sectionAnchor[k]}` === url);
-  return id ? visibleSections.includes(id) : true;
-}
-
-/** Número editorial de cada sección ("01", "02"…) según su orden visible. */
-export function sectionNumber(id: SectionId): string {
-  return String(visibleSections.indexOf(id) + 1).padStart(2, "0");
-}
 
 const navLabelFor: Partial<Record<SectionId, keyof Labels>> = {
   projects: "navProjects",
@@ -174,16 +116,6 @@ const navLabelFor: Partial<Record<SectionId, keyof Labels>> = {
 /** En escritorio se ven las primeras secciones; el resto va en el botón "Más". */
 export const NAV_VISIBLE_DESKTOP = 4;
 
-/** Menú: todas las secciones visibles (en tu orden) + contacto al final. */
-export const navItems = [
-  ...visibleSections.filter((id) => navLabelFor[id]),
-  ...(visibleSections.includes("contact") ? (["contact"] as const) : []),
-].map((id) => ({
-  id,
-  href: `#${sectionAnchor[id]}`,
-  label: id === "contact" ? labels.navContact : labels[navLabelFor[id]!],
-}));
-
 export function initials(name: string): string {
   return name
     .split(/\s+/)
@@ -193,25 +125,104 @@ export function initials(name: string): string {
     .join("");
 }
 
-/**
- * El canal de contacto principal, en un solo lugar:
- * WhatsApp si hay número, si no, email. `topic` agrega el servicio al mensaje.
- */
-export function contactLink(topic?: string): { label: string; url: string } | undefined {
-  const { whatsapp, email } = config.person;
-  const phone = whatsapp?.replace(/\D/g, "");
-  if (phone) {
-    const text = topic ? `${labels.whatsappAbout} ${topic}` : labels.whatsappHello;
-    return { label: labels.writeWhatsApp, url: `https://wa.me/${phone}?text=${encodeURIComponent(text)}` };
-  }
-  if (email) {
-    return { label: labels.writeMe, url: `mailto:${email}${topic ? `?subject=${encodeURIComponent(topic)}` : ""}` };
-  }
-  return undefined;
-}
-
 export function isExternal(url: string): boolean {
   return /^https?:\/\//.test(url);
 }
 
-export { config };
+/**
+ * Todo lo que el portfolio necesita, calculado a partir de la configuración.
+ * Es una función (y no valores fijos) para que el editor pueda mostrar cambios en vivo.
+ */
+export function createContent(config: PortfolioConfig) {
+  const labels: Labels = { ...defaultLabels, ...config.labels };
+
+  const projects: ResolvedProject[] = (config.projects?.items ?? []).map((p) => ({
+    ...p,
+    slug: p.slug ? slugify(p.slug) : slugify(p.title),
+  }));
+
+  /** Una sección se muestra si está activada y tiene contenido. */
+  const hasContent = (id: SectionId): boolean => {
+    switch (id) {
+      case "projects":
+        return projects.length > 0;
+      case "gallery":
+        return Boolean(config.gallery?.items.length);
+      case "services":
+        return Boolean(config.services?.items.length);
+      case "testimonials":
+        return Boolean(config.testimonials?.items.length);
+      case "about":
+        return Boolean(config.about && (config.about.text.length > 0 || config.about.points?.length));
+      case "skills":
+        return Boolean(config.skills?.groups.some((g) => g.items.length > 0));
+      case "lab":
+        return Boolean(config.lab && (config.lab.items.length || config.lab.lookingFor));
+      case "experience":
+        return Boolean(config.experience?.items.length);
+      case "education":
+        return Boolean(config.education?.items.length || config.education?.certifications?.length);
+      case "contact":
+        return true;
+      default:
+        return false;
+    }
+  };
+
+  const entries = Object.entries(config.sections ?? {}) as [SectionId, boolean | undefined][];
+  /** Secciones activadas (`true`), en su orden, que además tienen contenido. */
+  const visibleSections = entries.filter(([id, on]) => on === true && id in sectionAnchor && hasContent(id)).map(([id]) => id);
+  /** Secciones activadas pero sin contenido (para avisar al compilar). */
+  const emptySections = entries.filter(([id, on]) => on === true && id in sectionAnchor && !hasContent(id)).map(([id]) => id);
+
+  /** ¿El enlace lleva a algún lado? Un ancla a una sección oculta no. */
+  const linkIsAvailable = (url: string): boolean => {
+    if (!url.startsWith("#")) return true;
+    const id = (Object.keys(sectionAnchor) as SectionId[]).find((k) => `#${sectionAnchor[k]}` === url);
+    return id ? visibleSections.includes(id) : true;
+  };
+
+  /** Número editorial de cada sección ("01", "02"…) según su orden visible. */
+  const sectionNumber = (id: SectionId): string => String(visibleSections.indexOf(id) + 1).padStart(2, "0");
+
+  /** Menú: todas las secciones visibles (en tu orden) + contacto al final. */
+  const navItems = [
+    ...visibleSections.filter((id) => navLabelFor[id]),
+    ...(visibleSections.includes("contact") ? (["contact"] as const) : []),
+  ].map((id) => ({
+    id,
+    href: `#${sectionAnchor[id]}`,
+    label: id === "contact" ? labels.navContact : labels[navLabelFor[id]!],
+  }));
+
+  /** Canal de contacto principal: WhatsApp si hay número, si no, email. */
+  const contactLink = (topic?: string): { label: string; url: string } | undefined => {
+    const { whatsapp, email } = config.person;
+    const phone = whatsapp?.replace(/\D/g, "");
+    if (phone) {
+      const text = topic ? `${labels.whatsappAbout} ${topic}` : labels.whatsappHello;
+      return { label: labels.writeWhatsApp, url: `https://wa.me/${phone}?text=${encodeURIComponent(text)}` };
+    }
+    if (email) {
+      return { label: labels.writeMe, url: `mailto:${email}${topic ? `?subject=${encodeURIComponent(topic)}` : ""}` };
+    }
+    return undefined;
+  };
+
+  return { config, labels, projects, visibleSections, emptySections, linkIsAvailable, sectionNumber, navItems, contactLink };
+}
+
+export type Content = ReturnType<typeof createContent>;
+
+const ContentContext = createContext<Content | null>(null);
+
+export function ContentProvider({ content, children }: { content: Content; children: ReactNode }) {
+  return createElement(ContentContext.Provider, { value: content }, children);
+}
+
+/** Acceso al contenido desde cualquier componente. */
+export function useContent(): Content {
+  const value = useContext(ContentContext);
+  if (!value) throw new Error("useContent debe usarse dentro de <ContentProvider>");
+  return value;
+}

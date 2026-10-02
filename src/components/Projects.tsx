@@ -1,26 +1,27 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { config, labels, projects } from "../lib/content";
+import { useContent, type ResolvedProject } from "../lib/content";
 import { ProjectCard } from "./ProjectCard";
 import { ProjectDialog } from "./ProjectDialog";
 import { Section } from "./primitives";
 
 const HASH_PREFIX = "#proyecto/";
 
-function slugFromHash(): string | null {
+function slugFromHash(projects: ResolvedProject[]): string | null {
   if (!location.hash.startsWith(HASH_PREFIX)) return null;
   const slug = decodeURIComponent(location.hash.slice(HASH_PREFIX.length));
   return projects.some((p) => p.slug === slug) ? slug : null;
 }
 
 export function Projects() {
+  const { config, labels, projects } = useContent();
   const [openSlug, setOpenSlug] = useState<string | null>(null);
   // Si el diálogo se abrió desde la página, cerrar = volver atrás en el historial.
   const openedInPage = useRef(false);
 
   useEffect(() => {
-    setOpenSlug(slugFromHash());
+    setOpenSlug(slugFromHash(projects));
     const onHash = () => {
-      const slug = slugFromHash();
+      const slug = slugFromHash(projects);
       if (slug) openedInPage.current = true;
       setOpenSlug(slug);
     };

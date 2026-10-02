@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import { labels, visibleSections } from "./lib/content";
+import { useContent } from "./lib/content";
 import type { SectionId } from "./lib/types";
 import { Contact, Footer } from "./components/Contact";
 import { Gallery, Services, Testimonials } from "./components/Extras";
@@ -23,6 +23,7 @@ const sectionComponents: Record<SectionId, ComponentType> = {
 };
 
 export function App() {
+  const { labels, visibleSections } = useContent();
   return (
     <>
       <a

@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import { responsive } from "../lib/images";
-import { config, initials, labels, linkIsAvailable } from "../lib/content";
+import { initials, useContent } from "../lib/content";
 import { useState } from "react";
 import { ArrowRight, Pause, Play, Sparkle } from "./Icons";
 import { Rich, SmartLink, SocialLinks } from "./primitives";
@@ -35,6 +35,7 @@ const stickerSpots: { className: string; style: CSSProperties }[] = [
 ];
 
 function Portrait() {
+  const { config } = useContent();
   const { person, hero } = config;
   const stickers = (hero?.marquee ?? []).slice(0, 3);
   return (
@@ -103,6 +104,7 @@ function Name({ name }: { name: string }) {
 }
 
 export function Hero() {
+  const { config, linkIsAvailable } = useContent();
   const { person, hero, links } = config;
   // Si un botón apunta a una sección oculta, no se muestra.
   const primary = hero?.primaryCta && linkIsAvailable(hero.primaryCta.url) ? hero.primaryCta : undefined;
@@ -162,6 +164,7 @@ export function Hero() {
 }
 
 function Marquee({ items }: { items: string[] }) {
+  const { labels } = useContent();
   const [paused, setPaused] = useState(false);
   const run = Array.from({ length: Math.max(2, Math.ceil(8 / items.length)) }, () => items).flat();
   return (

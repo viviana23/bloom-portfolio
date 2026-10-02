@@ -1,14 +1,12 @@
-import { useEffect, useRef, useState } from "react";
-import { NAV_VISIBLE_DESKTOP, config, initials, labels, navItems, sectionAnchor, sectionNumber, visibleSections } from "../lib/content";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { NAV_VISIBLE_DESKTOP, initials, sectionAnchor, useContent, type Content } from "../lib/content";
 import { useActiveSection, useScrolled } from "../lib/hooks";
 import { ArrowRight, ChevronDown, Close } from "./Icons";
 import { SocialLinks } from "./primitives";
 import { ThemeToggle } from "./ThemeToggle";
 
-// Observamos todas las secciones para que el menú solo resalte la que se ve.
-const sectionIds = ["inicio", ...visibleSections.map((id) => sectionAnchor[id])];
-
 function Monogram() {
+  const { config } = useContent();
   return (
     <span
       aria-hidden="true"
@@ -19,10 +17,7 @@ function Monogram() {
   );
 }
 
-type NavItem = (typeof navItems)[number];
-const sectionNav = navItems.filter((n) => n.id !== "contact");
-const primaryNav = sectionNav.slice(0, NAV_VISIBLE_DESKTOP);
-const moreNav = sectionNav.slice(NAV_VISIBLE_DESKTOP);
+type NavItem = Content["navItems"][number];
 
 function NavLink({ item, active, onClick }: { item: NavItem; active: boolean; onClick?: () => void }) {
   return (
@@ -41,6 +36,7 @@ function NavLink({ item, active, onClick }: { item: NavItem; active: boolean; on
 
 /** "Más ▾": las secciones que no caben en la barra de escritorio. */
 function MoreMenu({ items, active }: { items: NavItem[]; active: string | null }) {
+  const { labels } = useContent();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const hasActive = items.some((i) => i.href.slice(1) === active);
@@ -96,6 +92,12 @@ function MoreMenu({ items, active }: { items: NavItem[]; active: string | null }
 }
 
 export function Header() {
+  const { config, labels, navItems, sectionNumber, visibleSections } = useContent();
+  // Observamos todas las secciones para que el menú solo resalte la que se ve.
+  const sectionIds = useMemo(() => ["inicio", ...visibleSections.map((id) => sectionAnchor[id])], [visibleSections]);
+  const sectionNav = navItems.filter((n) => n.id !== "contact");
+  const primaryNav = sectionNav.slice(0, NAV_VISIBLE_DESKTOP);
+  const moreNav = sectionNav.slice(NAV_VISIBLE_DESKTOP);
   const scrolled = useScrolled();
   const active = useActiveSection(sectionIds);
   const menuRef = useRef<HTMLDialogElement>(null);

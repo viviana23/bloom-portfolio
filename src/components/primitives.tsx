@@ -1,5 +1,5 @@
 import { Fragment, type CSSProperties, type ReactNode } from "react";
-import { isExternal, labels, sectionAnchor, sectionNumber } from "../lib/content";
+import { isExternal, sectionAnchor, useContent } from "../lib/content";
 import type { Link, SectionId } from "../lib/types";
 import { useReveal } from "../lib/hooks";
 import { ArrowUpRight, Sparkle } from "./Icons";
@@ -26,6 +26,7 @@ export function SmartLink({
   children?: ReactNode;
   showArrow?: boolean;
 }) {
+  const { labels } = useContent();
   const external = isExternal(link.url);
   return (
     <a
@@ -73,6 +74,7 @@ export function Section({
   /** false si el contenido anima sus propios elementos. */
   revealContent?: boolean;
 }) {
+  const { sectionNumber } = useContent();
   const headerRef = useReveal<HTMLElement>();
   const contentRef = useReveal<HTMLDivElement>();
   const headingId = `${sectionAnchor[id]}-titulo`;

@@ -1,4 +1,4 @@
-import { labels } from "../lib/content";
+import { useContent } from "../lib/content";
 import { useTheme } from "../lib/hooks";
 import { Moon, Sun } from "./Icons";
 
@@ -7,6 +7,7 @@ import { Moon, Sun } from "./Icons";
  * Mientras nadie lo toque, el sitio sigue el tema del dispositivo (o `theme.defaultMode`).
  */
 export function ThemeToggle({ className = "" }: { className?: string }) {
+  const { labels } = useContent();
   const { resolved, setMode } = useTheme();
   const isDark = resolved === "dark";
   const label = isDark ? labels.themeLight : labels.themeDark;

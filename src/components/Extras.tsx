@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { responsive } from "../lib/images";
-import { config, contactLink, labels } from "../lib/content";
+import { useContent } from "../lib/content";
 import { ArrowLeft, ArrowRight, Check, Close, Sparkle } from "./Icons";
 import { Section, SmartLink } from "./primitives";
 
@@ -21,6 +21,7 @@ function spanFor(i: number, total: number): string {
 }
 
 export function Gallery() {
+  const { config, labels } = useContent();
   const gallery = config.gallery!;
   const items = gallery.items;
   const [open, setOpen] = useState<number | null>(null);
@@ -133,6 +134,7 @@ export function Gallery() {
 
 /* ── Servicios / encargos ─────────────────────────────────────── */
 export function Services() {
+  const { config, contactLink, labels } = useContent();
   const services = config.services!;
   return (
     <Section id="services" title={services.title ?? labels.titleServices} intro={services.intro} band={2}>
@@ -194,6 +196,7 @@ export function Services() {
 
 /* ── Testimonios ──────────────────────────────────────────────── */
 export function Testimonials() {
+  const { config, labels } = useContent();
   const t = config.testimonials!;
   return (
     <Section id="testimonials" title={t.title ?? labels.titleTestimonials}>

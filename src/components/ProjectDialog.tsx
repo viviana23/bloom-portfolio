@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { responsive } from "../lib/images";
-import { labels, projects, type ResolvedProject } from "../lib/content";
+import { useContent, type ResolvedProject } from "../lib/content";
 import { ArrowLeft, ArrowRight, Close } from "./Icons";
 import { SmartLink } from "./primitives";
 
@@ -24,6 +24,7 @@ export function ProjectDialog({
   onClose: () => void;
   onNavigate: (slug: string) => void;
 }) {
+  const { labels, projects } = useContent();
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {

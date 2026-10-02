@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { responsive } from "../lib/images";
-import { CREDIT, config, contactLink, labels, sectionAnchor, sectionNumber, visibleSections } from "../lib/content";
+import { CREDIT, sectionAnchor, useContent } from "../lib/content";
 import { useReveal } from "../lib/hooks";
 import { ArrowRight, ArrowUp, ArrowUpRight, Check, Copy, Sparkle } from "./Icons";
 import { Rich, SmartLink, SocialLinks } from "./primitives";
 
 function CopyEmail({ email }: { email: string }) {
+  const { labels } = useContent();
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     try {
@@ -34,6 +35,7 @@ function CopyEmail({ email }: { email: string }) {
 }
 
 export function Contact() {
+  const { config, contactLink, labels, sectionNumber } = useContent();
   const { contact, person, links } = config;
   const ref = useReveal<HTMLDivElement>();
   const cta = contact?.cta ?? contactLink();
@@ -104,6 +106,7 @@ export function Contact() {
 }
 
 function CreditLink({ name, url }: { name: string; url: string }) {
+  const { labels } = useContent();
   return (
     <a href={url} target="_blank" rel="noopener" className="inline-flex min-h-11 items-center gap-1 font-semibold md:min-h-0">
       <span className="link-underline">{name}</span>
@@ -115,6 +118,7 @@ function CreditLink({ name, url }: { name: string; url: string }) {
 
 /** Línea final: créditos y "volver arriba". */
 function SiteFooter() {
+  const { config, labels } = useContent();
   const { person, site } = config;
   return (
     <footer className="container-page mt-16 md:mt-24">
@@ -145,6 +149,7 @@ function SiteFooter() {
 
 /** Pie de página cuando la sección de contacto está oculta. */
 export function Footer() {
+  const { visibleSections } = useContent();
   if (visibleSections.includes("contact")) return null;
   return (
     <div className="pb-4">

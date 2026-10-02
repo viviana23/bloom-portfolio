@@ -1,4 +1,4 @@
-import { labels, type ResolvedProject } from "../lib/content";
+import { useContent, type ResolvedProject } from "../lib/content";
 import { responsive } from "../lib/images";
 import { useReveal } from "../lib/hooks";
 import { ArrowUpRight } from "./Icons";
@@ -12,6 +12,7 @@ export function ProjectCard({
   index: number;
   wide: boolean;
 }) {
+  const { labels } = useContent();
   const ref = useReveal<HTMLElement>();
   const block = (index % 4) + 1;
   const number = String(index + 1).padStart(2, "0");
