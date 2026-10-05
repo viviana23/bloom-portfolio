@@ -12,6 +12,7 @@ import type { StepProps } from "./steps/shared";
 import { StartStep, StyleStep } from "./steps/StartStyle";
 import { OfferStep, TrajectoryStep, WorkStep } from "./steps/WorkSteps";
 import type { ImageCtx } from "./ui/fields";
+import { SavedInfo } from "./ui/SavedInfo";
 
 const steps: { title: string; intro: string; anchor: string; Step: ComponentType<StepProps> }[] = [
   { title: "Empieza", intro: "Cuéntanos a qué te dedicas y preparamos tu portfolio.", anchor: "inicio", Step: StartStep },
@@ -124,15 +125,7 @@ export function EditorApp() {
             <span className="block text-[0.75rem] text-ink/50">una iniciativa de Qodira</span>
           </span>
         </a>
-        <p aria-live="polite" className="text-[0.8125rem] font-medium text-ink/50">
-          {saved ? (
-            <>
-              ✓ Guardado<span className="hidden sm:inline"> en este navegador</span>
-            </>
-          ) : (
-            "Guardando…"
-          )}
-        </p>
+        <SavedInfo saved={saved} onGoToDownload={() => editor.setStep(steps.length - 1)} />
       </header>
 
       <div className="flex min-h-0 flex-1">

@@ -82,16 +82,22 @@ CÓMO PUBLICARLO (gratis)
 
 CÓMO CAMBIAR TU PORTFOLIO DESPUÉS DE PUBLICARLO
 Las veces que quieras:
-1. Entra de nuevo al Editor de Bloom (https://www.qodira.com/bloom-editor).
-   Tus textos y fotos siguen ahí, guardados en tu navegador.
+1. Entra de nuevo al Editor de Bloom (https://www.qodira.com/bloom-editor)
+   desde la misma computadora y el mismo navegador: tus textos y fotos
+   siguen ahí.
 2. Haz tus cambios y descarga tu portfolio otra vez.
 3. En Netlify, abre tu sitio, ve a "Deploys" y arrastra la carpeta nueva.
    Tu portfolio se actualiza y conserva la misma dirección.
    (Arrástrala en "Deploys" de tu sitio, no en la página de Netlify Drop:
    ahí se crearía un sitio nuevo con otra dirección.)
 
-¿Cambiaste de computadora? En el primer paso del editor usa
+GUARDA ESTA CARPETA: ES TU COPIA DE SEGURIDAD
+Tu avance en el editor se guarda solo en la computadora y el navegador
+donde lo hiciste. No lo encontrarás si entras desde otro equipo o desde
+el celular, si usas otro navegador o una ventana de incógnito, o si
+borras el historial. En esos casos, en el primer paso del editor usa
 "Abrir un portfolio descargado" y elige esta carpeta.
+Consejo: súbela a Google Drive o a otro lugar seguro.
 
 No borres el archivo mi-portfolio.json: es tu información para poder
 seguir editando.

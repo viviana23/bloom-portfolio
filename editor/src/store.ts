@@ -91,6 +91,8 @@ export function useEditor() {
 
   // Cargar lo guardado
   useEffect(() => {
+    // Pedimos al navegador que no borre estos datos por su cuenta cuando necesite espacio.
+    navigator.storage?.persist?.().catch(() => {});
     (async () => {
       try {
         const stored = await db.get<EditorState>(STATE_KEY);

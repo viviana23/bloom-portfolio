@@ -144,7 +144,7 @@ export function PublishStep({ editor, ctx }: StepProps) {
             <strong>Importante:</strong> arrástrala en <em>Deploys</em> de tu sitio, no en la página de Netlify Drop; ahí se crearía un sitio nuevo con otra dirección.
           </p>
           <p className="mt-2">
-            <em>¿Cambiaste de computadora?</em> En el primer paso del editor usa «Abrir un portfolio descargado» y elige la carpeta que bajaste la última vez.
+            <strong>Guarda la carpeta descargada</strong> en un lugar seguro, como Google Drive: es tu copia de seguridad. Tu avance queda guardado solo en esta computadora y en este navegador; si entras desde otro equipo, otro navegador o una ventana de incógnito, o si borras el historial, abre esa carpeta con «Abrir un portfolio descargado» en el primer paso.
           </p>
         </div>
       </Card>
