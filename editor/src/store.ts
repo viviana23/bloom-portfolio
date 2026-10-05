@@ -37,7 +37,7 @@ export function blankConfig(prof: Profession): PortfolioConfig {
       secondaryCta: { label: "Contactarme", url: "#contacto" },
       marquee: prof.marquee,
     },
-    sections: sectionsFor(prof.kind),
+    sections: sectionsFor(prof.kind, prof.extraSections),
     about: { text: [""], points: [] },
     projects: { items: [] },
     gallery: { items: [] },

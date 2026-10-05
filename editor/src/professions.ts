@@ -18,6 +18,8 @@ export interface Profession {
   headline: string;
   marquee: string[];
   labels?: Partial<Labels>;
+  /** Secciones que esta profesión enciende además de las de su tipo. */
+  extraSections?: SectionId[];
 }
 
 /** Orden único de las secciones (el de la plantilla). La profesión solo decide cuáles se encienden. */
@@ -33,8 +35,8 @@ const sectionsByKind: Record<Kind, SectionId[]> = {
   inicio: ["projects", "about", "skills", "lab", "education", "contact"],
 };
 
-export function sectionsFor(kind: Kind): PortfolioConfig["sections"] {
-  const on = sectionsByKind[kind];
+export function sectionsFor(kind: Kind, extra: SectionId[] = []): PortfolioConfig["sections"] {
+  const on = [...sectionsByKind[kind], ...extra];
   const sections: PortfolioConfig["sections"] = {};
   for (const id of ALL_SECTIONS) sections[id] = on.includes(id);
   return sections;
@@ -80,7 +82,8 @@ export const professions: Profession[] = [
     role: "Creadora de contenido · Estratega digital",
     headline: "Creo contenido que conecta marcas con personas *de verdad*.",
     marquee: ["Contenido", "Redes sociales", "Estrategia"],
-    labels: { navProjects: "Campañas", titleProjects: "Campañas *destacadas*" },
+    labels: { navProjects: "Campañas", titleProjects: "Campañas *destacadas*", navGallery: "Piezas", titleGallery: "Piezas *destacadas*" },
+    extraSections: ["gallery"],
   },
   {
     id: "artesania", name: "Artesana, joyería o hecho a mano", style: "divertido", palette: "arena", kind: "visual",
@@ -143,7 +146,8 @@ export const professions: Profession[] = [
     role: "Diseñadora UX/UI",
     headline: "Diseño productos digitales que las personas *entienden a la primera*.",
     marquee: ["Diseño UX", "Interfaces", "Branding"],
-    labels: { navProjects: "Casos", titleProjects: "Casos de *estudio*" },
+    labels: { navProjects: "Casos", titleProjects: "Casos de *estudio*", navGallery: "Exploraciones", titleGallery: "Más *exploraciones*" },
+    extraSections: ["gallery"],
   },
   {
     id: "tecnologia", name: "Desarrolladora o tecnología", style: "profesional", palette: "tinta", kind: "carrera",
@@ -157,14 +161,15 @@ export const professions: Profession[] = [
     role: "Analista de datos",
     headline: "Convierto datos en *decisiones claras* para los equipos.",
     marquee: ["Análisis de datos", "Visualización", "SQL"],
-    labels: { navSkills: "Herramientas", titleSkills: "Mis *herramientas*" },
+    labels: { navSkills: "Herramientas", titleSkills: "Mis *herramientas*", navGallery: "Visualizaciones", titleGallery: "*Visualizaciones*" },
   },
   {
     id: "marketing", name: "Marketing digital o growth", style: "profesional", palette: "arena", kind: "carrera",
     role: "Especialista en marketing digital",
     headline: "Diseño estrategias que hacen *crecer marcas* con datos y creatividad.",
     marquee: ["Marketing digital", "Growth", "Contenido"],
-    labels: { navProjects: "Campañas", titleProjects: "Campañas *destacadas*" },
+    labels: { navProjects: "Campañas", titleProjects: "Campañas *destacadas*", navGallery: "Piezas", titleGallery: "Piezas *destacadas*" },
+    extraSections: ["gallery"],
   },
   {
     id: "arquitectura", name: "Arquitecta o interiorista", style: "minimal", palette: "arena", kind: "visual",

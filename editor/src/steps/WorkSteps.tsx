@@ -13,6 +13,7 @@ export function WorkStep({ editor, ctx }: StepProps) {
   const update = editor.update;
   const projects = c.projects?.items ?? [];
   const gallery = c.gallery?.items ?? [];
+  const pro = c.theme.style === "profesional";
   const input = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(0);
 
@@ -104,13 +105,22 @@ export function WorkStep({ editor, ctx }: StepProps) {
         />
       </Card>
 
-      <Card id="card-galeria" title="Galería" description="Tus mejores fotos en un mosaico. Puedes subir varias a la vez." {...sectionSwitch(editor, "gallery")}>
+      <Card
+        id="card-galeria"
+        title={pro ? "Galería (más trabajos)" : "Galería"}
+        description={
+          pro
+            ? "Pantallas, piezas o visualizaciones que no necesitan un caso completo. Se ven en una cuadrícula ordenada con su título debajo."
+            : "Tus mejores fotos en un mosaico. Puedes subir varias a la vez."
+        }
+        {...sectionSwitch(editor, "gallery")}
+      >
         {gallery.length > 0 && (
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {gallery.map((g, i) => (
               <li key={g.src} className="flex flex-col gap-2 rounded-xl border border-line bg-paper p-2">
                 <div
-                  className="aspect-square rounded-lg bg-ink/5 bg-cover bg-center"
+                  className={`${pro ? "aspect-[16/10] bg-top" : "aspect-square bg-center"} rounded-lg bg-ink/5 bg-cover`}
                   style={{ backgroundImage: ctx.urlFor(g.src) ? `url(${ctx.urlFor(g.src)})` : undefined }}
                   role="img"
                   aria-label={g.alt || "Foto de la galería"}
@@ -119,14 +129,14 @@ export function WorkStep({ editor, ctx }: StepProps) {
                   aria-label={`Texto corto de la foto ${i + 1}`}
                   value={g.caption ?? ""}
                   onChange={(e) => update((d) => void (d.gallery!.items[i]!.caption = e.target.value))}
-                  placeholder="Etiqueta (opcional)"
+                  placeholder={pro ? "Título (ej. App de pagos)" : "Etiqueta (opcional)"}
                   className="min-h-10 rounded-lg border border-line px-2 text-[0.8125rem] outline-none focus:border-brand"
                 />
                 <input
                   aria-label={`Descripción de la foto ${i + 1}`}
                   value={g.alt}
                   onChange={(e) => update((d) => void (d.gallery!.items[i]!.alt = e.target.value))}
-                  placeholder="¿Qué se ve?"
+                  placeholder={pro ? "Qué es (ej. Pantalla de inicio en Figma)" : "¿Qué se ve?"}
                   className="min-h-10 rounded-lg border border-line px-2 text-[0.8125rem] outline-none focus:border-brand"
                 />
                 <button

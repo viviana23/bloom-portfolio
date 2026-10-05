@@ -21,7 +21,7 @@ function spanFor(i: number, total: number): string {
 }
 
 export function Gallery() {
-  const { config, labels } = useContent();
+  const { config, labels, isPro } = useContent();
   const gallery = config.gallery!;
   const items = gallery.items;
   const [open, setOpen] = useState<number | null>(null);
@@ -39,36 +39,65 @@ export function Gallery() {
 
   return (
     <Section id="gallery" title={gallery.title ?? labels.titleGallery} intro={gallery.intro}>
-      <ul className="grid auto-rows-[9.5rem] grid-cols-2 gap-3 sm:auto-rows-[12rem] md:grid-cols-4 md:gap-4 lg:auto-rows-[14rem]">
-        {items.map((img, i) => (
-          <li key={img.src} className={spanFor(i, items.length)}>
-            <button
-              type="button"
-              onClick={() => setOpen(i)}
-              aria-label={`${labels.openPhoto}: ${img.alt}`}
-              className="group relative block h-full w-full overflow-hidden rounded-[calc(1.25rem*var(--round))] border-[length:var(--bw)] border-[color:var(--line)] bg-surface md:rounded-[calc(1.5rem*var(--round))]"
-            >
-              <img
-                src={img.src}
-                {...responsive(img.src, "(min-width: 768px) 50vw, 100vw")}
-                alt=""
-                loading="lazy"
-                decoding="async"
-                style={{ objectPosition: img.focus ?? "center" }}
-                className="h-full w-full object-cover transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:scale-[1.06]"
-              />
-              {img.caption && (
-                <span
-                  className="chip absolute bottom-3 left-3 max-w-[calc(100%-1.5rem)] truncate border-[length:var(--bw)] border-[color:var(--line)] shadow-[var(--pop)]"
-                  style={blockStyle((i % 4) + 1)}
-                >
-                  {img.caption}
+      {isPro ? (
+        // Profesional: cuadrícula pareja en formato pantalla, con el texto debajo (no recorta capturas).
+        <ul className="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((img, i) => (
+            <li key={img.src}>
+              <button type="button" onClick={() => setOpen(i)} aria-label={`${labels.openPhoto}: ${img.alt}`} className="group block w-full text-left">
+                <span className="relative block aspect-[16/10] overflow-hidden rounded-[calc(0.9rem*var(--round))] border-[length:var(--bw)] border-[color:var(--line)] bg-surface transition-colors group-hover:border-[color:var(--accent)]">
+                  <img
+                    src={img.src}
+                    {...responsive(img.src, "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw")}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    style={{ objectPosition: img.focus ?? "top" }}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                  />
                 </span>
-              )}
-            </button>
-          </li>
-        ))}
-      </ul>
+                {img.caption && (
+                  <span className="mt-3 block">
+                    <span className="block font-semibold leading-snug">{img.caption}</span>
+                    {img.alt && img.alt !== img.caption && <span className="mt-0.5 block text-[0.875rem] leading-snug text-muted">{img.alt}</span>}
+                  </span>
+                )}
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <ul className="grid auto-rows-[9.5rem] grid-cols-2 gap-3 sm:auto-rows-[12rem] md:grid-cols-4 md:gap-4 lg:auto-rows-[14rem]">
+          {items.map((img, i) => (
+            <li key={img.src} className={spanFor(i, items.length)}>
+              <button
+                type="button"
+                onClick={() => setOpen(i)}
+                aria-label={`${labels.openPhoto}: ${img.alt}`}
+                className="group relative block h-full w-full overflow-hidden rounded-[calc(1.25rem*var(--round))] border-[length:var(--bw)] border-[color:var(--line)] bg-surface md:rounded-[calc(1.5rem*var(--round))]"
+              >
+                <img
+                  src={img.src}
+                  {...responsive(img.src, "(min-width: 768px) 50vw, 100vw")}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  style={{ objectPosition: img.focus ?? "center" }}
+                  className="h-full w-full object-cover transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:scale-[1.06]"
+                />
+                {img.caption && (
+                  <span
+                    className="chip absolute bottom-3 left-3 max-w-[calc(100%-1.5rem)] truncate border-[length:var(--bw)] border-[color:var(--line)] shadow-[var(--pop)]"
+                    style={blockStyle((i % 4) + 1)}
+                  >
+                    {img.caption}
+                  </span>
+                )}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
 
       <dialog
         ref={dialogRef}
