@@ -106,6 +106,7 @@ export function usedImages(config: PortfolioConfig): string[] {
     else if (v && typeof v === "object") {
       for (const [k, val] of Object.entries(v)) {
         if ((k === "src" || k === "ogImage") && typeof val === "string" && val.startsWith("/fotos/")) found.add(val);
+        else if (k === "url" && typeof val === "string" && val.startsWith("/archivos/")) found.add(val);
         else walk(val);
       }
     }

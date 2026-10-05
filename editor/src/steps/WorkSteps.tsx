@@ -54,6 +54,13 @@ export function WorkStep({ editor, ctx }: StepProps) {
               <Field label="Título" value={p.title} onChange={(v) => set((d) => void (d.title = v))} placeholder="Ej. Pastel de bodas con frutos rojos" />
               <TextArea label="Resumen corto" hint="Una o dos frases. Es lo que se ve en la tarjeta." value={p.summary} onChange={(v) => set((d) => void (d.summary = v))} rows={2} />
               <ImagePicker label="Foto principal" value={p.cover} onChange={(img) => set((d) => void (d.cover = img))} ctx={ctx} showFocus />
+              <Field
+                label="Herramientas o tecnologías (opcional)"
+                hint="Sepáralas con comas. En el estilo Profesional se muestran como etiquetas."
+                value={(p.tools ?? []).join(", ")}
+                onChange={(v) => set((d) => void (d.tools = v.split(",").map((t) => t.trimStart())))}
+                placeholder="Ej. React, Figma, Python, Canva"
+              />
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Tipo de trabajo" value={p.type} onChange={(v) => set((d) => void (d.type = v))} placeholder="Ej. Boda, Cliente, Personal" />
                 <Field label="Año" value={p.year} onChange={(v) => set((d) => void (d.year = v))} placeholder="Ej. 2026" maxLength={9} />
@@ -66,6 +73,26 @@ export function WorkStep({ editor, ctx }: StepProps) {
                 onChange={(v) => set((d) => void (d.process = v))}
               />
               <TextArea label="¿Cuál fue el resultado?" value={p.result} onChange={(v) => set((d) => void (d.result = v))} />
+              <div className="grid gap-4 sm:grid-cols-2">
+                {[0, 1].map((k) => (
+                  <Field
+                    key={k}
+                    label={k === 0 ? "Enlace principal (opcional)" : "Otro enlace (opcional)"}
+                    hint={k === 0 ? "Ej. la página publicada, la demo o el caso completo." : "Ej. el código en GitHub o un video."}
+                    type="url"
+                    value={p.links?.[k]?.url}
+                    onChange={(v) =>
+                      set((d) => {
+                        const links = [...(d.links ?? [])];
+                        const url = v.trim() && !/^https?:\/\//.test(v.trim()) ? `https://${v.trim()}` : v.trim();
+                        links[k] = { label: /github\.com|gitlab\.com/.test(url) ? "Ver código" : k === 0 ? "Ver en línea" : "Ver más", url };
+                        d.links = links.filter((l) => l && l.url);
+                      })
+                    }
+                    placeholder={k === 0 ? "https://…" : "https://github.com/…"}
+                  />
+                ))}
+              </div>
               <ImagePicker
                 label="Otra foto del proyecto (opcional)"
                 value={p.gallery?.[0]}

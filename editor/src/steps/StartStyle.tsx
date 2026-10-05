@@ -101,7 +101,8 @@ export function StartStep({ editor, ctx }: StepProps) {
 const styleInfo: Record<StyleName, { title: string; text: string }> = {
   divertido: { title: "Divertido", text: "Alegre y cercano: bordes marcados, stickers y color." },
   elegante: { title: "Elegante", text: "Sofisticado: líneas finas y letra clásica." },
-  minimal: { title: "Minimal", text: "Sobrio y limpio: sin adornos, muy profesional." },
+  minimal: { title: "Minimal", text: "Sobrio y limpio: sin adornos, con mucho aire." },
+  profesional: { title: "Profesional", text: "Compacto y estructurado, como un CV moderno. Para tecnología, diseño UX, datos y marketing." },
 };
 
 const paletteInfo: Record<PaletteName, string> = {
@@ -144,7 +145,7 @@ export function StyleStep({ editor }: StepProps) {
   return (
     <div className="flex flex-col gap-5">
       <Card title="Estilo" description="El carácter de tu portfolio.">
-        <div className="grid gap-2 sm:grid-cols-3">
+        <div className="grid gap-2 sm:grid-cols-2">
           {styles.map((s) => (
             <button
               key={s}

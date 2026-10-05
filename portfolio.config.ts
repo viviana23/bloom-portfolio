@@ -346,7 +346,7 @@ export default definePortfolio({
 
   // ── 16. Estilo y colores ─────────────────────────────────────
   // Elige tu look con dos palabras:
-  //   style:   "divertido" · "elegante" · "minimal"
+  //   style:   "divertido" · "elegante" · "minimal" · "profesional"
   //   palette: "fresa" · "salvia" · "arena" · "lavanda" · "tinta"
   // Cada paleta trae su versión clara y oscura.
   // ¿No sabes cuál elegir? Algunas combinaciones según tu profesión
@@ -355,9 +355,9 @@ export default definePortfolio({
   //   Ilustradora, contenido ........ divertido + lavanda
   //   Bodas, coaching ............... elegante  + arena
   //   Yoga, bienestar, florista ..... elegante  + salvia
-  //   Fotógrafa, tecnología ......... minimal   + tinta
-  //   Psicóloga, terapeuta .......... minimal   + salvia
-  //   Abogada, arquitecta ........... minimal   + arena
+  //   Fotógrafa, arquitecta ......... minimal     + tinta
+  //   Desarrolladora, datos ......... profesional + tinta
+  //   Diseñadora UX, marketing ...... profesional + lavanda
   theme: {
     style: "divertido",
     palette: "fresa",

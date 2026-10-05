@@ -271,6 +271,8 @@ export interface PortfolioConfig {
      * · "divertido": bordes marcados, sombras de sticker, elementos girados.
      * · "elegante": líneas finas, sin sombras, tipografía serif clásica.
      * · "minimal": limpio y sobrio, tipografía sans, sin decoraciones.
+     * · "profesional": estructura de CV y portfolio para carreras digitales
+     *   (tecnología, diseño UX, datos, marketing): compacto, sin bandas de color.
      */
     style?: StyleName;
     /** Una paleta lista (claro + oscuro): "fresa", "salvia", "arena", "lavanda" o "tinta". */

@@ -7,7 +7,7 @@
  */
 import type { Palette, PortfolioConfig } from "./types.ts";
 
-export const styles = ["divertido", "elegante", "minimal"] as const;
+export const styles = ["divertido", "elegante", "minimal", "profesional"] as const;
 export type StyleName = (typeof styles)[number];
 
 export const paletteNames = ["fresa", "salvia", "arena", "lavanda", "tinta"] as const;

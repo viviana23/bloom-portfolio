@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import { responsive } from "../lib/images";
 import { initials, useContent } from "../lib/content";
 import { useState } from "react";
-import { ArrowRight, Pause, Play, Sparkle } from "./Icons";
+import { ArrowRight, Download, Pause, Play, Sparkle } from "./Icons";
 import { Rich, SmartLink, SocialLinks } from "./primitives";
 
 /** Sello circular con texto que gira. */
@@ -104,7 +104,8 @@ function Name({ name }: { name: string }) {
 }
 
 export function Hero() {
-  const { config, linkIsAvailable } = useContent();
+  const { config, linkIsAvailable, isPro } = useContent();
+  if (isPro) return <HeroPro />;
   const { person, hero, links } = config;
   // Si un botón apunta a una sección oculta, no se muestra.
   const primary = hero?.primaryCta && linkIsAvailable(hero.primaryCta.url) ? hero.primaryCta : undefined;
@@ -203,3 +204,79 @@ function Marquee({ items }: { items: string[] }) {
     </div>
   );
 }
+
+/**
+ * Portada del estilo "profesional": compacta, como un CV moderno.
+ * Nombre, rol y frase a la izquierda; foto circular a la derecha; CV a la vista.
+ */
+function HeroPro() {
+  const { config, linkIsAvailable } = useContent();
+  const { person, hero, links } = config;
+  const primary = hero?.primaryCta && linkIsAvailable(hero.primaryCta.url) ? hero.primaryCta : undefined;
+  const secondary = hero?.secondaryCta && linkIsAvailable(hero.secondaryCta.url) ? hero.secondaryCta : undefined;
+
+  return (
+    <section id="inicio" aria-labelledby="inicio-titulo">
+      <div className="container-page grid items-center gap-10 pb-16 pt-12 md:grid-cols-12 md:gap-12 md:pb-20 md:pt-20">
+        <div className="hero-item order-2 md:order-1 md:col-span-8">
+          {person.availability && (
+            <p className="mb-6 inline-flex items-center gap-2.5 rounded-full border-[length:var(--bw)] border-[color:var(--line)] px-3.5 py-1.5 text-[0.875rem] font-medium">
+              <span aria-hidden="true" className="relative flex h-2 w-2">
+                <span className="absolute inset-0 animate-ping rounded-full bg-accent opacity-50 [animation-duration:2.4s] [animation-iteration-count:3]" />
+                <span className="relative h-2 w-2 rounded-full bg-accent" />
+              </span>
+              {person.availability}
+            </p>
+          )}
+          <h1 id="inicio-titulo" className="text-display text-[clamp(2.5rem,6.5vw,4.5rem)] leading-[1.02]">
+            {person.name}
+          </h1>
+          <p className="mt-3 text-[1.25rem] font-semibold text-accent md:text-[1.5rem]">{person.role}</p>
+          <p className="rich mt-5 max-w-2xl text-[1.0625rem] leading-relaxed text-fg/80 md:text-[1.1875rem]">
+            <Rich text={person.headline} />
+          </p>
+          {person.location && <p className="mt-4 text-[0.9375rem] text-muted">{person.location}</p>}
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            {primary && (
+              <SmartLink link={primary} className="btn btn-primary group" showArrow={false}>
+                {primary.label}
+                <ArrowRight className="transition-transform duration-300 group-hover:translate-x-0.5" />
+              </SmartLink>
+            )}
+            {person.resume && (
+              <a href={person.resume.url} download className="btn btn-secondary">
+                <Download />
+                {person.resume.label}
+              </a>
+            )}
+            {secondary && !person.resume && <SmartLink link={secondary} className="btn btn-secondary" showArrow={false} />}
+          </div>
+          <SocialLinks links={links} className="mt-6" />
+        </div>
+
+        <div className="hero-item order-1 md:order-2 md:col-span-4 md:justify-self-end [--d:120ms]">
+          <div className="grid aspect-square w-32 place-items-center overflow-hidden rounded-full border-[length:var(--bw)] border-[color:var(--line)] bg-surface md:w-64">
+            {person.photo ? (
+              <img
+                src={person.photo.src}
+                {...responsive(person.photo.src, "(min-width: 768px) 256px, 128px")}
+                alt={person.photo.alt}
+                width={512}
+                height={512}
+                fetchPriority="high"
+                className="h-full w-full object-cover"
+                style={{ objectPosition: person.photo.focus ?? "center" }}
+              />
+            ) : (
+              <span aria-hidden="true" className="text-display text-[2.5rem] text-accent md:text-[5rem]">
+                {initials(person.name)}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+

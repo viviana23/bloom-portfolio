@@ -22,7 +22,7 @@ export function PublishStep({ editor, ctx }: StepProps) {
     (e) => !COVERED.test(e),
   );
   const { emptySections } = createContent(final);
-  const photos = usedImages(final);
+  const photos = usedImages(final).filter((p) => p.startsWith("/fotos/"));
 
   const checks: Check[] = [
     { ok: Boolean(c.person.name.trim()), required: true, text: "Tu nombre", fix: "Es obligatorio: va en grande al inicio.", step: 1 },

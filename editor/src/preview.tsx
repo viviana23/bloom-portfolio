@@ -28,7 +28,7 @@ let userPickedTheme = false;
 /** Reemplaza "/fotos/x.jpg" por la foto subida (blob:) para verla sin publicar. */
 function withImages(config: PortfolioConfig, images: Record<string, string>): PortfolioConfig {
   return JSON.parse(JSON.stringify(config), (key, value) =>
-    (key === "src" || key === "ogImage") && typeof value === "string" && images[value] ? images[value] : value,
+    (key === "src" || key === "ogImage" || key === "url") && typeof value === "string" && images[value] ? images[value] : value,
   );
 }
 

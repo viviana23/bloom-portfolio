@@ -35,7 +35,7 @@ function CopyEmail({ email }: { email: string }) {
 }
 
 export function Contact() {
-  const { config, contactLink, labels, sectionNumber } = useContent();
+  const { config, contactLink, labels, sectionNumber, isPro } = useContent();
   const { contact, person, links } = config;
   const ref = useReveal<HTMLDivElement>();
   const cta = contact?.cta ?? contactLink();
@@ -45,13 +45,17 @@ export function Contact() {
   return (
     <div className="px-2 pb-2 pt-3 md:px-4 md:pb-4">
       <div
-        className="rounded-[calc(2rem*var(--round))] pt-16 md:rounded-[calc(3rem*var(--round))] md:pt-24"
-        style={{ background: "var(--block-1)", color: "var(--on-block-1)" }}
+        className={
+          isPro
+            ? "border-t-[length:var(--bw)] border-[color:var(--line)] pt-16 md:pt-20"
+            : "rounded-[calc(2rem*var(--round))] pt-16 md:rounded-[calc(3rem*var(--round))] md:pt-24"
+        }
+        style={isPro ? undefined : { background: "var(--block-1)", color: "var(--on-block-1)" }}
       >
         <section id={sectionAnchor.contact} aria-labelledby="contacto-titulo">
           <div ref={ref} className="reveal container-page grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-16">
             <div className="lg:col-span-7">
-              <p aria-hidden="true" className="chip mb-6 border-[length:var(--bw)] border-[color:var(--line-current)]">
+              <p aria-hidden="true" className="bloom-section-number chip mb-6 border-[length:var(--bw)] border-[color:var(--line-current)]">
                 <Sparkle className="text-[0.7rem] text-accent" />
                 {sectionNumber("contact")} · {labels.titleContact}
               </p>

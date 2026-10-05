@@ -289,7 +289,8 @@ theme: {
 
 - **`divertido`** — Alegre y cercano, con bordes marcados y stickers. Ideal para repostería, hecho a mano, belleza, eventos e ilustración.
 - **`elegante`** — Líneas finas y letra clásica. Ideal para bodas, bienestar, coaching, arquitectura y moda.
-- **`minimal`** — Sobrio y limpio. Ideal para consultoría, psicología, abogacía y tecnología.
+- **`minimal`** — Sobrio y con mucho aire. Ideal para fotografía, arquitectura e interiorismo.
+- **`profesional`** — Compacto y estructurado, como un CV moderno: foto circular, botón para descargar tu CV y proyectos con tecnologías y enlaces. Ideal para tecnología, diseño UX, datos y marketing digital.
 
 **Paletas de color:**
 
@@ -307,7 +308,7 @@ theme: {
 | Chef, cocina saludable, catering | `divertido` | `salvia` | Fresco y natural, con sabor a ingredientes de temporada |
 | Maquilladora, manicurista, estética | `divertido` | `fresa` | Cercano y con mucha personalidad, ideal para mostrar antes y después |
 | Ilustradora, artista, tatuadora | `divertido` | `lavanda` | Creativo y juguetón, deja que tus colores brillen |
-| Creadora de contenido, community manager, marketing | `divertido` | `lavanda` | Moderno y con energía, se ve bien en redes |
+| Creadora de contenido, community manager | `divertido` | `lavanda` | Moderno y con energía, se ve bien en redes |
 | Artesana, joyería, hecho a mano | `divertido` | `arena` | Cálido y con textura, transmite oficio |
 | Profesora, educación infantil, talleres | `divertido` | `salvia` | Amable y tranquilo, genera confianza en las familias |
 | Wedding planner, organizadora de eventos | `elegante` | `arena` | Sofisticado y atemporal, habla de detalle y calma |
@@ -316,11 +317,11 @@ theme: {
 | Coach, mentora, consultora de imagen | `elegante` | `arena` | Cálido y profesional a la vez |
 | Estilista, diseñadora de moda | `elegante` | `tinta` | Editorial, con aire de revista |
 | Fotógrafa, videógrafa | `minimal` | `tinta` | Neutro, para que tus fotos sean las protagonistas |
-| Diseñadora gráfica, diseñadora UX/UI | `minimal` | `lavanda` | Limpio, con un toque de creatividad |
-| Desarrolladora, analista de datos, tecnología | `minimal` | `tinta` | Sobrio y directo, muy profesional |
-| Psicóloga, terapeuta | `minimal` | `salvia` | Tranquilo y cuidado, sin distracciones |
 | Arquitecta, interiorista | `minimal` | `arena` | Ordenado y cálido, como un buen espacio |
-| Abogada, contadora, consultora | `minimal` | `arena` | Serio y confiable, sin frialdad |
+| Diseñadora gráfica, diseñadora UX/UI | `profesional` | `lavanda` | Estructurado, con un toque de creatividad |
+| Desarrolladora, tecnología | `profesional` | `tinta` | Como un CV moderno: proyectos con tecnologías y enlaces |
+| Analista de datos o BI | `profesional` | `salvia` | Claro y ordenado, para mostrar casos y herramientas |
+| Marketing digital o growth | `profesional` | `arena` | Campañas con resultados, CV descargable |
 
 Son solo puntos de partida: si una combinación no te representa, prueba otra. Guarda, espera un minuto y mira cómo queda.
 

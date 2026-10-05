@@ -122,7 +122,8 @@ theme: {
 |--------|-----------|------------|
 | `divertido` | Bordes marcados, sombras de sticker, elementos girados, cinta de color | Repostería, hecho a mano, ilustración, belleza, eventos, contenido |
 | `elegante` | Líneas finas, sin sombras ni giros, serif clásica | Bodas, bienestar, coaching, arquitectura, interiorismo, moda |
-| `minimal` | Sobrio, tipografía sans, sin decoraciones | Consultoría, abogacía, psicología, tecnología, perfiles corporativos |
+| `minimal` | Sobrio, tipografía sans, sin decoraciones | Fotografía, arquitectura, interiorismo |
+| `profesional` | Compacto y estructurado, como un CV moderno: foto circular, CV descargable, proyectos con tecnologías y enlaces | Tecnología, diseño UX, datos, marketing digital, búsqueda de empleo |
 
 **Paletas** (cada una trae versión clara y oscura):
 
@@ -142,7 +143,7 @@ Cualquier estilo funciona con cualquier paleta. Estas son nuestras recomendacion
 | Chef, cocina saludable, catering | `divertido` | `salvia` | Fresco y natural, con sabor a ingredientes de temporada |
 | Maquilladora, manicurista, estética | `divertido` | `fresa` | Cercano y con mucha personalidad, ideal para mostrar antes y después |
 | Ilustradora, artista, tatuadora | `divertido` | `lavanda` | Creativo y juguetón, deja que tus colores brillen |
-| Creadora de contenido, community manager, marketing | `divertido` | `lavanda` | Moderno y con energía, se ve bien en redes |
+| Creadora de contenido, community manager | `divertido` | `lavanda` | Moderno y con energía, se ve bien en redes |
 | Artesana, joyería, hecho a mano | `divertido` | `arena` | Cálido y con textura, transmite oficio |
 | Profesora, educación infantil, talleres | `divertido` | `salvia` | Amable y tranquilo, genera confianza en las familias |
 | Wedding planner, organizadora de eventos | `elegante` | `arena` | Sofisticado y atemporal, habla de detalle y calma |
@@ -151,11 +152,13 @@ Cualquier estilo funciona con cualquier paleta. Estas son nuestras recomendacion
 | Coach, mentora, consultora de imagen | `elegante` | `arena` | Cálido y profesional a la vez |
 | Estilista, diseñadora de moda | `elegante` | `tinta` | Editorial, con aire de revista |
 | Fotógrafa, videógrafa | `minimal` | `tinta` | Neutro, para que tus fotos sean las protagonistas |
-| Diseñadora gráfica, diseñadora UX/UI | `minimal` | `lavanda` | Limpio, con un toque de creatividad |
-| Desarrolladora, analista de datos, tecnología | `minimal` | `tinta` | Sobrio y directo, muy profesional |
-| Psicóloga, terapeuta | `minimal` | `salvia` | Tranquilo y cuidado, sin distracciones |
 | Arquitecta, interiorista | `minimal` | `arena` | Ordenado y cálido, como un buen espacio |
-| Abogada, contadora, consultora | `minimal` | `arena` | Serio y confiable, sin frialdad |
+| Diseñadora gráfica, diseñadora UX/UI | `profesional` | `lavanda` | Estructurado, con un toque de creatividad |
+| Desarrolladora, tecnología | `profesional` | `tinta` | Como un CV moderno: proyectos con tecnologías y enlaces |
+| Analista de datos o BI | `profesional` | `salvia` | Claro y ordenado, para mostrar casos y herramientas |
+| Marketing digital o growth | `profesional` | `arena` | Campañas con resultados, CV descargable |
+
+> Bloom Portfolio está pensado para mostrar **trabajo**: oficios creativos y carreras digitales. Si ofreces servicios profesionales sin trabajo visual que mostrar (abogacía, contaduría, consultoría, psicología), lo que necesitas es una página de servicios, no un portfolio.
 
 **¿Quieres ajustar un color?** Escribe solo ese color y se aplica encima de la paleta:
 

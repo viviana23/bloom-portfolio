@@ -428,3 +428,59 @@ export function Tip({ children }: { children: ReactNode }) {
     </p>
   );
 }
+
+/** Subir un PDF (ej. el CV). Se guarda en el navegador y se incluye al descargar. */
+export function PdfPicker({
+  label,
+  hint,
+  value,
+  onChange,
+  ctx,
+}: {
+  label: string;
+  hint?: string;
+  value: string | undefined;
+  onChange: (path: string | undefined) => void;
+  ctx: ImageCtx;
+}) {
+  const input = useRef<HTMLInputElement>(null);
+  const pick = async (file: File | undefined) => {
+    if (!file) return;
+    if (file.type !== "application/pdf" && !/\.pdf$/i.test(file.name)) {
+      alert("Sube tu CV en PDF. Desde Word o Google Docs: Archivo → Descargar → PDF.");
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      alert("El PDF pesa más de 8 MB. Prueba exportarlo de nuevo con menos imágenes.");
+      return;
+    }
+    const path = `/archivos/cv-${Math.random().toString(36).slice(2, 6)}.pdf`;
+    await ctx.addImage(path, file);
+    onChange(path);
+  };
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-[0.875rem] font-semibold text-ink">{label}</span>
+      {hint && <p className="-mt-1 text-[0.8125rem] text-ink/55">{hint}</p>}
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={() => input.current?.click()}
+          className="min-h-11 rounded-lg bg-brand px-4 text-[0.875rem] font-semibold text-white transition hover:bg-brand-dark"
+        >
+          {value ? "Cambiar PDF" : "Subir PDF"}
+        </button>
+        {value && (
+          <>
+            <span className="text-[0.875rem] font-medium text-emerald-700">✓ CV cargado</span>
+            <button type="button" onClick={() => onChange(undefined)} className="min-h-9 text-[0.8125rem] font-semibold text-ink/55 hover:text-red-600">
+              Quitar
+            </button>
+          </>
+        )}
+      </div>
+      <input ref={input} type="file" accept="application/pdf,.pdf" hidden onChange={(e) => pick(e.target.files?.[0])} />
+    </div>
+  );
+}
+

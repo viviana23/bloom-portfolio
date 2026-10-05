@@ -74,7 +74,9 @@ export function Section({
   /** false si el contenido anima sus propios elementos. */
   revealContent?: boolean;
 }) {
-  const { sectionNumber } = useContent();
+  const { sectionNumber, isPro } = useContent();
+  // En el estilo profesional no hay bandas de color: todas las secciones van sobre el fondo.
+  if (isPro) band = undefined;
   const headerRef = useReveal<HTMLElement>();
   const contentRef = useReveal<HTMLDivElement>();
   const headingId = `${sectionAnchor[id]}-titulo`;
@@ -84,14 +86,14 @@ export function Section({
         <div className="md:col-span-7">
           <p
             aria-hidden="true"
-            className={`chip mb-5 border-[length:var(--bw)] border-[color:var(--line-current)] ${band ? "" : "text-fg"}`}
+            className={`bloom-section-number chip mb-5 border-[length:var(--bw)] border-[color:var(--line-current)] ${band ? "" : "text-fg"}`}
           >
             <Sparkle className={`text-[0.7rem] ${band === "ink" ? "text-block-1" : "text-accent"}`} />
             {sectionNumber(id)}
           </p>
           <h2
             id={headingId}
-            className={`text-title text-[2.5rem] leading-[1] md:text-[3.75rem] ${band ? "on-color" : ""}`}
+            className={`bloom-section-title text-title text-[2.5rem] leading-[1] md:text-[3.75rem] ${band ? "on-color" : ""}`}
           >
             <Rich text={title} />
           </h2>

@@ -85,7 +85,8 @@
 }
 
 /* Estilo "minimal": sobrio, tipografía sans, sin decoraciones. */
-[data-style="minimal"] {
+[data-style="minimal"],
+[data-style="profesional"] {
   --font-display: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --display-weight: 600;
   --soft: 0;
@@ -103,6 +104,13 @@
   --pop-lg: 0 0 0 0 transparent;
   --pop-xl: 0 30px 80px -40px color-mix(in srgb, var(--fg) 35%, transparent);
   --arch-top: calc(1.75rem * 0.35);
+}
+
+/* Estilo "profesional": como minimal, pero más compacto y sobrio. */
+[data-style="profesional"] {
+  --display-tracking: -0.035em;
+  --round: 0.45;
+  --surface: color-mix(in srgb, var(--fg) 3.5%, var(--bg));
 }
 
 @layer base {
@@ -503,3 +511,28 @@
     display: none;
   }
 }
+
+/*
+ * ── Estilo "profesional" ──────────────────────────────────────
+ * Sin adornos ni bloques de color: las tarjetas pasan a superficies neutras.
+ */
+[data-style="profesional"] .decor,
+[data-style="profesional"] .decor-playful,
+[data-style="profesional"] .marquee-band {
+  display: none;
+}
+[data-style="profesional"] .tile[style],
+[data-style="profesional"] .sticker[style] {
+  background: var(--surface) !important;
+  color: var(--fg) !important;
+  border-color: var(--line) !important;
+}
+[data-style="profesional"] .bloom-section-title {
+  font-size: clamp(1.75rem, 3vw, 2.25rem) !important;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+}
+[data-style="profesional"] .bloom-section-number {
+  display: none;
+}
+

@@ -1,5 +1,6 @@
 import { createContext, createElement, useContext, type ReactNode } from "react";
 import type { Labels, PortfolioConfig, Project, SectionId } from "./types.ts";
+import { resolveTheme } from "./themes.ts";
 
 export const defaultLabels: Labels = {
   skipToContent: "Saltar al contenido",
@@ -212,7 +213,10 @@ export function createContent(config: PortfolioConfig) {
     return undefined;
   };
 
-  return { config, labels, projects, visibleSections, emptySections, linkIsAvailable, sectionNumber, navItems, contactLink };
+  /** Estilo "profesional": estructura compacta para carreras digitales (sin bandas de color). */
+  const isPro = resolveTheme(config.theme).style === "profesional";
+
+  return { config, labels, projects, visibleSections, emptySections, linkIsAvailable, sectionNumber, navItems, contactLink, isPro };
 }
 
 export type Content = ReturnType<typeof createContent>;

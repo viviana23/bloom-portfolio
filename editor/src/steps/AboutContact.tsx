@@ -1,4 +1,4 @@
-import { Card, Field, ImagePicker, TextArea, Tip } from "../ui/fields";
+import { Card, Field, ImagePicker, PdfPicker, TextArea, Tip } from "../ui/fields";
 import { sectionSwitch, type StepProps } from "./shared";
 
 export function AboutStep({ editor, ctx, prof }: StepProps) {
@@ -45,6 +45,13 @@ export function AboutStep({ editor, ctx, prof }: StepProps) {
           onChange={(img) => update((d) => void (d.person.photo = img))}
           ctx={ctx}
           showFocus
+        />
+        <PdfPicker
+          label="Tu CV en PDF (opcional)"
+          hint='Aparece un botón «Descargar CV». Ideal si buscas empleo o trabajas en tecnología, diseño o datos.'
+          value={c.person.resume?.url}
+          onChange={(path) => update((d) => void (d.person.resume = path ? { label: "Descargar CV", url: path } : undefined))}
+          ctx={ctx}
         />
         <Field
           label="Tus especialidades (3 a 5 palabras)"

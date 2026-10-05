@@ -28,7 +28,7 @@ FORMATO (respeta exactamente estos nombres):
   "whatsapp": "con código de país, solo números. Ej: 573001234567",
   "correo": "",
   "redes": { "instagram": "", "tiktok": "", "facebook": "", "linkedin": "", "youtube": "", "pinterest": "", "behance": "", "web": "" },
-  "proyectos": [{ "titulo": "", "resumen": "1 o 2 frases", "tipo": "Ej: Cliente, Personal, Académico", "anio": "", "reto": "", "proceso": "", "resultado": "" }],
+  "proyectos": [{ "titulo": "", "resumen": "1 o 2 frases", "tipo": "Ej: Cliente, Personal, Académico", "anio": "", "reto": "", "proceso": "", "resultado": "", "herramientas": ["tecnologías o herramientas usadas"], "enlace": "URL del proyecto si existe", "codigo": "URL del repositorio si existe" }],
   "servicios": [{ "nombre": "", "descripcion": "", "precio": "", "incluye": [""] }],
   "testimonios": [{ "comentario": "", "nombre": "", "contexto": "" }],
   "habilidades": [{ "grupo": "Ej: Herramientas", "items": [""] }],
@@ -59,7 +59,7 @@ interface AiData {
   whatsapp?: Str;
   correo?: Str;
   redes?: Record<string, Str>;
-  proyectos?: { titulo?: Str; resumen?: Str; tipo?: Str; anio?: Str; reto?: Str; proceso?: Str; resultado?: Str }[];
+  proyectos?: { titulo?: Str; resumen?: Str; tipo?: Str; anio?: Str; reto?: Str; proceso?: Str; resultado?: Str; herramientas?: string[]; enlace?: Str; codigo?: Str }[];
   servicios?: { nombre?: Str; descripcion?: Str; precio?: Str; incluye?: string[] }[];
   testimonios?: { comentario?: Str; nombre?: Str; contexto?: Str }[];
   habilidades?: { grupo?: Str; items?: string[] }[];
@@ -159,6 +159,11 @@ export function applyAiData(base: PortfolioConfig, input: unknown): ImportResult
         problem: s(p.reto) || undefined,
         process: s(p.proceso) || undefined,
         result: s(p.resultado) || undefined,
+        tools: strings(p.herramientas),
+        links: [
+          ...(/^https?:\/\//.test(s(p.enlace)) ? [{ label: "Ver en línea", url: s(p.enlace) }] : []),
+          ...(/^https?:\/\//.test(s(p.codigo)) ? [{ label: "Ver código", url: s(p.codigo) }] : []),
+        ],
       })),
     };
     on("projects", `${proyectos.length} ${proyectos.length === 1 ? "proyecto" : "proyectos"}`);

@@ -199,24 +199,26 @@ export function Lab() {
 
 /* ── Experiencia: línea de tiempo sobre tinta ─────────────────── */
 export function Experience() {
-  const { config, labels } = useContent();
+  const { config, labels, isPro } = useContent();
+  // En el estilo profesional la línea de tiempo va sobre el fondo claro, no sobre tinta.
+  const accentOnBand = isPro ? "text-accent" : "text-block-1";
   const exp = config.experience!;
   return (
     <Section id="experience" title={exp.title ?? labels.titleExperience} band="ink">
-      <ol className="relative flex flex-col gap-10 border-l-[length:var(--bw)] border-bg/25 pl-8 md:ml-4 md:gap-14 md:pl-12">
+      <ol className={`relative flex flex-col gap-10 border-l-[length:var(--bw)] ${isPro ? "border-[color:var(--line)]" : "border-bg/25"} pl-8 md:ml-4 md:gap-14 md:pl-12`}>
         {exp.items.map((item, i) => (
           <li key={item.role + item.company} className="relative grid gap-3 md:grid-cols-12 md:gap-8">
             <span
               aria-hidden="true"
               className="absolute -left-[2.6rem] top-1 h-5 w-5 rounded-full border-[length:var(--bw)] border-bg md:-left-[3.6rem]"
-              style={{ background: i === 0 ? "var(--block-1)" : "var(--fg)" }}
+              style={{ background: i === 0 ? (isPro ? "var(--accent)" : "var(--block-1)") : isPro ? "var(--muted)" : "var(--fg)" }}
             />
             <p className="md:col-span-3">
-              <span className="chip bg-bg text-fg">{item.period}</span>
+              <span className={`chip ${isPro ? "bg-surface" : "bg-bg"} text-fg`}>{item.period}</span>
             </p>
             <div className="md:col-span-9">
               <h3 className="text-title text-[1.75rem] leading-tight md:text-[2.25rem]">
-                {item.role} <em className="!text-block-1">· {item.company}</em>
+                {item.role} <em className={isPro ? "!text-muted" : "!text-block-1"}>· {item.company}</em>
               </h3>
               {item.location && <p className="mt-1 text-[0.875rem] opacity-70">{item.location}</p>}
               {item.description && <p className="mt-4 max-w-2xl text-[1.0625rem] leading-relaxed opacity-90">{item.description}</p>}
@@ -224,7 +226,7 @@ export function Experience() {
                 <ul className="mt-5 flex flex-col gap-3">
                   {item.achievements.map((a) => (
                     <li key={a} className="flex gap-3 text-[0.9375rem] leading-relaxed opacity-90">
-                      <Sparkle className="mt-1 shrink-0 text-[0.8rem] text-block-1" />
+                      <Sparkle className={`mt-1 shrink-0 text-[0.8rem] ${accentOnBand}`} />
                       <span>{a}</span>
                     </li>
                   ))}

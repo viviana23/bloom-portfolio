@@ -120,11 +120,11 @@ export async function buildPortfolioZip(
   const paths = usedImages(config);
   let done = 0;
   for (const path of paths) {
-    onProgress(`Optimizando fotos (${++done} de ${paths.length})…`);
+    onProgress(`Preparando tus archivos (${++done} de ${paths.length})…`);
     const blob = images.get(path) ?? (await fetch(`${import.meta.env.BASE_URL}${path.slice(1)}`).then((r) => (r.ok ? r.blob() : undefined)));
     if (!blob) continue;
     files[path.slice(1)] = new Uint8Array(await blob.arrayBuffer());
-    if (webp) {
+    if (webp && path.startsWith("/fotos/")) {
       for (const width of IMAGE_WIDTHS) {
         const out = await canvasBlob(await toCanvas(blob, width), "image/webp", 0.78);
         files[variantPath(path, width).slice(1)] = new Uint8Array(await out.arrayBuffer());
