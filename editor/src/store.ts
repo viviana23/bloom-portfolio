@@ -5,12 +5,19 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { PortfolioConfig } from "../../src/lib/types";
 import { db } from "./db";
-import { findProfession, sectionsFor, type Profession } from "./professions";
+import { ALL_SECTIONS, findProfession, sectionsFor, type Profession } from "./professions";
 
 export interface EditorState {
   config: PortfolioConfig;
   professionId?: string;
   step: number;
+  /** Versión del orden de secciones (2 = orden de la demo, con Contacto al final). */
+  order?: number;
+}
+
+/** Pone las secciones en el orden recomendado (el de la demo), sin cambiar cuáles se ven. */
+export function withRecommendedOrder(config: PortfolioConfig): PortfolioConfig {
+  return { ...config, sections: Object.fromEntries(ALL_SECTIONS.map((k) => [k, config.sections[k] ?? false])) };
 }
 
 const STATE_KEY = "state";
@@ -94,9 +101,11 @@ export function useEditor() {
           if (blob) map.set(k.slice(IMG_PREFIX.length), blob);
         }
         setImages(map);
-        setState(stored ?? { config: blankConfig(findProfession("inicio")!), step: 0 });
+        // Portfolios guardados con el orden anterior: se pasan una sola vez al orden de la demo.
+        const migrated = stored && stored.order !== 2 ? { ...stored, order: 2, config: withRecommendedOrder(stored.config) } : stored;
+        setState(migrated ?? { config: blankConfig(findProfession("inicio")!), step: 0, order: 2 });
       } catch {
-        setState({ config: blankConfig(findProfession("inicio")!), step: 0 });
+        setState({ config: blankConfig(findProfession("inicio")!), step: 0, order: 2 });
       }
       loaded.current = true;
     })();
@@ -148,7 +157,7 @@ export function useEditor() {
     const keys = await db.keys();
     await Promise.all(keys.map((k) => db.del(String(k))));
     setImages(new Map());
-    setState({ config: blankConfig(findProfession("inicio")!), step: 0 });
+    setState({ config: blankConfig(findProfession("inicio")!), step: 0, order: 2 });
   }, []);
 
   /** Carga el contenido que trajo la IA (o un archivo) y aplica la profesión si viene. */
@@ -158,6 +167,7 @@ export function useEditor() {
       const prof = findProfession(professionId);
       return {
         step: 1,
+        order: 2,
         professionId: prof?.id ?? s?.professionId,
         config: prof ? applyProfession(config, prof) : config,
       };
@@ -168,7 +178,7 @@ export function useEditor() {
   const importPortfolio = useCallback(async (config: PortfolioConfig, photos: Map<string, Blob>) => {
     for (const [path, blob] of photos) await db.set(IMG_PREFIX + path, blob);
     setImages((m) => new Map([...m, ...photos]));
-    setState((s) => ({ step: 1, professionId: s?.professionId, config }));
+    setState((s) => ({ step: 1, professionId: s?.professionId, config, order: 2 }));
   }, []);
 
   return { state, images, saved, notice, setNotice, update, setStep, chooseProfession, addImage, reset, importPortfolio, loadImported };

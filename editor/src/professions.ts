@@ -21,7 +21,7 @@ export interface Profession {
 }
 
 /** Orden único de las secciones (el de la plantilla). La profesión solo decide cuáles se encienden. */
-const ALL_SECTIONS: SectionId[] = [
+export const ALL_SECTIONS: SectionId[] = [
   "projects", "gallery", "about", "services", "testimonials", "skills", "lab", "experience", "education", "contact",
 ];
 

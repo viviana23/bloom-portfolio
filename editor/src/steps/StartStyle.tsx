@@ -5,6 +5,7 @@ import { professions } from "../professions";
 import { Card, Tip } from "../ui/fields";
 import { createContent } from "../../../src/lib/content";
 import { cleanConfig } from "../finalize";
+import { withRecommendedOrder } from "../store";
 import { ImportCard } from "./ImportCard";
 import { STEP_FOR_SECTION, type StepProps } from "./shared";
 
@@ -233,8 +234,7 @@ export function StyleStep({ editor }: StepProps) {
           type="button"
           onClick={() =>
             editor.update((d) => {
-              const recommended: SectionId[] = ["projects", "gallery", "about", "services", "testimonials", "skills", "lab", "experience", "education", "contact"];
-              d.sections = Object.fromEntries(recommended.map((k) => [k, d.sections[k] ?? false]));
+              d.sections = withRecommendedOrder(d).sections;
             })
           }
           className="self-start text-[0.8125rem] font-semibold text-brand hover:underline"
