@@ -14,7 +14,9 @@ Bloom es una iniciativa de [Qodira](https://www.qodira.com/es/bloom). Esta guía
 2. Elige a qué te dedicas, llena tus datos y sube tus fotos. Ves tu portfolio en vivo mientras escribes.
 3. En el último paso, toca **Descargar mi portfolio**, descomprime la carpeta y arrástrala a **[app.netlify.com/drop](https://app.netlify.com/drop)**.
 
-Listo: tu portfolio queda publicado, gratis. Tu avance se guarda en tu navegador para que puedas volver a editarlo.
+Listo: tu portfolio queda publicado, gratis.
+
+**¿Cómo cambio mi portfolio después de publicarlo?** Las veces que quieras. Entra de nuevo al editor: tus textos y fotos siguen ahí, guardados en tu navegador. Haz tus cambios y descarga tu portfolio otra vez. Luego, en Netlify, abre tu sitio, ve a **Deploys** y arrastra la carpeta nueva. Tu portfolio se actualiza y conserva la misma dirección. *(Arrástrala en Deploys de tu sitio, no en la página de Netlify Drop: ahí se crearía un sitio nuevo.)* ¿Cambiaste de computadora? En el editor usa «Abrir un portfolio descargado» y elige la carpeta que bajaste la última vez.
 
 **Atajo si ya tienes tu CV:** en el primer paso del editor toca **Llenar con mi CV**. Copias unas instrucciones, las pegas en tu IA (ChatGPT, Gemini, Claude o Copilot; sirven las versiones gratuitas) junto con tu CV, y pegas la respuesta en el editor. Se llena todo el formulario de una vez y solo te queda revisar y subir tus fotos. Tu CV lo compartes con la IA que elijas; Qodira no lo recibe.
 

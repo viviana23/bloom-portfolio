@@ -3,7 +3,7 @@ import { createContent, slugify } from "../../../src/lib/content";
 import { validateConfig } from "../../../src/lib/site";
 import { buildPortfolioZip, downloadBlob } from "../export";
 import { cleanConfig, usedImages } from "../finalize";
-import { Card, Tip } from "../ui/fields";
+import { Card } from "../ui/fields";
 import { sectionNames } from "./StartStyle";
 import { STEP_FOR_SECTION, type StepProps } from "./shared";
 
@@ -135,9 +135,18 @@ export function PublishStep({ editor, ctx }: StepProps) {
         >
           Abrir Netlify Drop ↗<span className="sr-only"> (se abre en una pestaña nueva)</span>
         </a>
-        <Tip>
-          Para <strong>actualizar</strong> tu portfolio: vuelve a este editor (tu avance queda guardado), haz tus cambios, descarga de nuevo y en Netlify entra a tu sitio → <em>Deploys</em> y arrastra la carpeta nueva.
-        </Tip>
+        <div className="rounded-xl bg-brand/[0.07] px-4 py-3 text-[0.875rem] leading-relaxed text-ink/75">
+          <p className="font-semibold text-brand">¿Cómo cambio mi portfolio después de publicarlo?</p>
+          <p className="mt-1">
+            Las veces que quieras. Entra de nuevo al editor: tus textos y fotos siguen ahí, guardados en tu navegador. Haz tus cambios y descarga tu portfolio otra vez. Luego, en Netlify, abre tu sitio, ve a <strong>Deploys</strong> y arrastra la carpeta nueva. Tu portfolio se actualiza y conserva la misma dirección.
+          </p>
+          <p className="mt-2">
+            <strong>Importante:</strong> arrástrala en <em>Deploys</em> de tu sitio, no en la página de Netlify Drop; ahí se crearía un sitio nuevo con otra dirección.
+          </p>
+          <p className="mt-2">
+            <em>¿Cambiaste de computadora?</em> En el primer paso del editor usa «Abrir un portfolio descargado» y elige la carpeta que bajaste la última vez.
+          </p>
+        </div>
       </Card>
 
     </div>
