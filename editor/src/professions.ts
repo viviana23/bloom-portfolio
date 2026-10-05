@@ -6,7 +6,7 @@
 import type { Labels, PortfolioConfig, SectionId } from "../../src/lib/types";
 import type { PaletteName, StyleName } from "../../src/lib/themes";
 
-type Kind = "visual" | "servicios" | "carrera" | "inicio";
+export type Kind = "visual" | "servicios" | "carrera" | "inicio";
 
 export interface Profession {
   id: string;

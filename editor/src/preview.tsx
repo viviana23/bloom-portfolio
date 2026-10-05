@@ -15,7 +15,7 @@ import { resolveTheme } from "../../src/lib/themes";
 import type { PortfolioConfig } from "../../src/lib/types";
 
 export type PreviewMessage =
-  | { type: "config"; config: PortfolioConfig; images: Record<string, string> }
+  | { type: "config"; config: PortfolioConfig; images: Record<string, string>; examples?: string[] }
   | { type: "scrollTo"; anchor: string };
 
 /** Mensajes de la vista previa al editor. */
@@ -53,6 +53,31 @@ function render(config: PortfolioConfig, images: Record<string, string>) {
   );
 }
 
+// Secciones con contenido de ejemplo: borde punteado y una etiqueta para que se note que hay que cambiarlo.
+const exampleStyle = document.createElement("style");
+exampleStyle.textContent = `
+  [data-example] { position: relative; }
+  [data-example]::before {
+    content: "Ejemplo · cámbialo con «Editar»";
+    position: absolute; top: 1rem; right: 1rem; z-index: 30;
+    padding: 6px 12px; border-radius: 999px;
+    background: #7c3aed; color: #fff; font: 600 13px/1.2 system-ui, sans-serif;
+  }
+  [data-example]::after {
+    content: ""; position: absolute; inset: .5rem; z-index: 0; pointer-events: none;
+    border: 2px dashed rgba(124, 58, 237, .45); border-radius: 1.25rem;
+  }
+`;
+document.head.append(exampleStyle);
+
+function markExamples(anchors: string[]) {
+  // Dos cuadros de espera: React termina de dibujar antes de marcar.
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.querySelectorAll("[data-example]").forEach((el) => el.removeAttribute("data-example"));
+    for (const a of anchors) document.getElementById(a)?.setAttribute("data-example", "");
+  }));
+}
+
 // Si la persona usa el botón de tema dentro de la vista previa, respetamos su elección.
 document.addEventListener("click", (e) => {
   if ((e.target as Element).closest("header button[aria-label^='Cambiar']")) userPickedTheme = true;
@@ -61,7 +86,10 @@ document.addEventListener("click", (e) => {
 window.addEventListener("message", (e: MessageEvent<PreviewMessage>) => {
   if (e.origin !== location.origin) return;
   const msg = e.data;
-  if (msg.type === "config") render(msg.config, msg.images);
+  if (msg.type === "config") {
+    render(msg.config, msg.images);
+    markExamples(msg.examples ?? []);
+  }
   if (msg.type === "scrollTo") {
     const el = msg.anchor === "inicio" ? document.body : document.getElementById(msg.anchor);
     if (msg.anchor === "inicio") scrollTo({ top: 0, behavior: "smooth" });

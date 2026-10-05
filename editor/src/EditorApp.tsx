@@ -1,3 +1,4 @@
+import { withExamples } from "./examples";
 import { useCallback, useEffect, useMemo, useRef, useState, type ComponentType } from "react";
 import { cleanConfig } from "./finalize";
 import { findProfession } from "./professions";
@@ -82,7 +83,10 @@ export function EditorApp() {
   // Enviar la configuración a la vista previa (con un pequeño respiro mientras escribe)
   useEffect(() => {
     if (!ready || !state) return;
-    const t = setTimeout(() => send({ type: "config", config: cleanConfig(state.config, { placeholders: prof }), images: urls }), 150);
+    const t = setTimeout(() => {
+      const { config, examples } = withExamples(cleanConfig(state.config, { placeholders: prof }), prof);
+      send({ type: "config", config, images: urls, examples: examples.map((id) => sectionAnchor[id]) });
+    }, 150);
     return () => clearTimeout(t);
   }, [ready, state, urls, prof, send]);
 
