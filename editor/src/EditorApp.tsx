@@ -1,9 +1,10 @@
-import { withExamples } from "./examples";
 import { useCallback, useEffect, useMemo, useRef, useState, type ComponentType } from "react";
+import { withExamples } from "./examples";
 import { cleanConfig } from "./finalize";
 import { findProfession } from "./professions";
 import { useEditor } from "./store";
 import type { EditorMessage, PreviewMessage } from "./preview";
+import { BloomMark } from "../../src/components/Icons";
 import { sectionAnchor } from "../../src/lib/content";
 import type { SectionId } from "../../src/lib/types";
 import { STEP_FOR_SECTION } from "./steps/shared";
@@ -123,7 +124,7 @@ export function EditorApp() {
       {/* Barra superior */}
       <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b border-line bg-white px-4 md:px-6">
         <a href="https://www.qodira.com/es/bloom" className="flex items-center gap-2.5" target="_blank" rel="noopener">
-          <span aria-hidden="true" className="grid h-9 w-9 place-items-center rounded-full bg-brand font-serif text-lg italic text-white">B</span>
+          <BloomMark className="h-9 w-9" />
           <span className="leading-tight">
             <span className="block text-[0.9375rem] font-bold text-ink">Editor de Bloom</span>
             <span className="block text-[0.75rem] text-ink/50">una iniciativa de Qodira</span>

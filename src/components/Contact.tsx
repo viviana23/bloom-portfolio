@@ -2,7 +2,7 @@ import { useState } from "react";
 import { responsive } from "../lib/images";
 import { CREDIT, sectionAnchor, useContent } from "../lib/content";
 import { useReveal } from "../lib/hooks";
-import { ArrowRight, ArrowUp, ArrowUpRight, Check, Copy, Sparkle } from "./Icons";
+import { ArrowRight, ArrowUp, ArrowUpRight, BloomMark, Check, Copy, Sparkle } from "./Icons";
 import { Rich, SmartLink, SocialLinks } from "./primitives";
 
 function CopyEmail({ email }: { email: string }) {
@@ -136,7 +136,7 @@ function SiteFooter() {
         </p>
         {site.showCredit !== false && (
           <p>
-            <Sparkle aria-hidden="true" className="mr-1.5 inline align-[-0.05em] text-[0.7rem] text-accent" />
+            <BloomMark className="mr-1.5 inline align-[-0.15em] text-[1.05rem]" />
             <span className="opacity-80">{labels.madeWith} </span>
             <CreditLink {...CREDIT.bloom} />
             <span className="opacity-80">, {labels.initiativeOf} </span>

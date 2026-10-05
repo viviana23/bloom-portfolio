@@ -86,6 +86,14 @@ export const Check = (p: IconProps) => (
 );
 
 /** Destello de cuatro puntas: el pequeño sello visual de Bloom. */
+/** Símbolo de Qodira Bloom (el brote). Lleva sus propios colores de marca. */
+export const BloomMark = (p: IconProps) => (
+  <svg width="1em" height="1em" viewBox="4 4 92 92" aria-hidden="true" focusable="false" {...p}>
+    <path d="M0,0 C12,-23.52 10.8,-68.88 0,-84 C-10.8,-68.88 -12,-23.52 0,0Z" fill="#8B5CF6" transform="translate(29 92) rotate(-4)" />
+    <path d="M29,92 C29,68 49,50 83,50 C79,78 59,94 29,92Z" fill="#EC9DC4" />
+  </svg>
+);
+
 export const Sparkle = (p: IconProps) => (
   <svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false" {...p}>
     <path d="M12 1.5c.5 5.6 3.4 9.3 10.5 10.5-7.1 1.2-10 4.9-10.5 10.5C11.5 16.9 8.6 13.2 1.5 12 8.6 10.8 11.5 7.1 12 1.5Z" />
