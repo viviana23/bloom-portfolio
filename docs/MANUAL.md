@@ -16,6 +16,10 @@ Bloom es una iniciativa de [Qodira](https://www.qodira.com/es/bloom). Esta guía
 
 Listo: tu portfolio queda publicado, gratis. Tu avance se guarda en tu navegador para que puedas volver a editarlo.
 
+**Atajo si ya tienes tu CV:** en el primer paso del editor toca **Llenar con mi CV**. Copias unas instrucciones, las pegas en tu IA (ChatGPT, Gemini, Claude o Copilot; sirven las versiones gratuitas) junto con tu CV, y pegas la respuesta en el editor. Se llena todo el formulario de una vez y solo te queda revisar y subir tus fotos. Tu CV lo compartes con la IA que elijas; Qodira no lo recibe.
+
+**Antes de descargar**, el paso *Publicar* te muestra qué falta, con un botón **Completar** que te lleva directo al lugar correcto.
+
 El resto de este manual explica el **camino con GitHub**, para quien quiera editar el código directamente.
 
 ---

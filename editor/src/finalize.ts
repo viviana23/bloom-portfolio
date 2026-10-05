@@ -87,7 +87,9 @@ export function cleanConfig(input: PortfolioConfig, opts: { placeholders?: Profe
 
   // SEO: si no lo escribió, lo armamos con su nombre y su frase
   if (!filled(c.site.title)) c.site.title = `${name} — ${plain(c.person.role)}`;
-  if (!filled(c.site.description)) c.site.description = plain(c.person.headline).slice(0, 160);
+  if (!filled(c.site.description)) {
+    c.site.description = (plain(c.person.headline) || `${name} · ${plain(c.person.role)}`).slice(0, 160);
+  }
   c.site.url = c.site.url?.trim() || undefined;
   // La imagen para redes es su foto principal
   c.site.ogImage = c.person.photo?.src;

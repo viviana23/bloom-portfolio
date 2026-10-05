@@ -1,12 +1,16 @@
 import { useState } from "react";
-import { slugify } from "../../../src/lib/content";
+import { createContent, slugify } from "../../../src/lib/content";
 import { validateConfig } from "../../../src/lib/site";
 import { buildPortfolioZip, downloadBlob } from "../export";
 import { cleanConfig, usedImages } from "../finalize";
 import { Card, Field, Tip } from "../ui/fields";
-import type { StepProps } from "./shared";
+import { sectionNames } from "./StartStyle";
+import { STEP_FOR_SECTION, type StepProps } from "./shared";
 
-type Check = { ok: boolean; required?: boolean; text: string; fix: string };
+type Check = { ok: boolean; required?: boolean; text: string; fix: string; step: number };
+
+// Estos datos ya se revisan con la lista de abajo, en lenguaje claro.
+const COVERED = /^Falta el campo (site\.|person\.)/;
 
 export function PublishStep({ editor, ctx }: StepProps) {
   const c = editor.state!.config;
@@ -14,20 +18,24 @@ export function PublishStep({ editor, ctx }: StepProps) {
   const [done, setDone] = useState(false);
 
   const final = cleanConfig(c);
-  const { errors } = validateConfig(final, { imageExists: (src) => ctx.images.has(src), where: "el editor" });
+  const errors = validateConfig(final, { imageExists: (src) => ctx.images.has(src), where: "el editor" }).errors.filter(
+    (e) => !COVERED.test(e),
+  );
+  const { emptySections } = createContent(final);
   const photos = usedImages(final);
 
   const checks: Check[] = [
-    { ok: Boolean(c.person.name.trim()), required: true, text: "Tu nombre", fix: "Escríbelo en el paso «Sobre ti»." },
-    { ok: Boolean(c.person.headline.trim()), text: "Tu frase principal", fix: "Agrégala en «Sobre ti»: es lo primero que leen." },
-    { ok: Boolean(c.person.photo?.src), text: "Tu foto principal", fix: "Un portfolio con foto genera más confianza." },
-    { ok: Boolean(final.person.whatsapp || final.person.email), text: "Tu WhatsApp o tu correo", fix: "Agrégalo en «Contacto» para que puedan escribirte." },
+    { ok: Boolean(c.person.name.trim()), required: true, text: "Tu nombre", fix: "Es obligatorio: va en grande al inicio.", step: 1 },
+    { ok: Boolean(c.person.headline.trim()), text: "Tu frase principal", fix: "Es lo primero que leen después de tu nombre.", step: 1 },
+    { ok: Boolean(c.person.photo?.src), text: "Tu foto principal", fix: "Un portfolio con foto genera más confianza.", step: 1 },
+    { ok: Boolean(final.person.whatsapp || final.person.email), text: "Tu WhatsApp o tu correo", fix: "Sin esto, no hay botones para que te escriban.", step: 5 },
     {
       ok: Boolean(final.projects?.items.length || final.gallery?.items.length || final.services?.items.length),
       text: "Al menos un proyecto, foto o servicio",
-      fix: "Muestra tu trabajo en «Tu trabajo» o «Lo que ofreces».",
+      fix: "Muestra tu trabajo: es lo que más convence.",
+      step: 2,
     },
-    { ok: final.links.length > 0, text: "Tus redes", fix: "Agrega al menos una en «Contacto»." },
+    { ok: final.links.length > 0, text: "Tus redes", fix: "Agrega al menos una para que te sigan.", step: 5 },
   ];
   const blocking = checks.some((k) => k.required && !k.ok) || errors.length > 0;
 
@@ -46,27 +54,36 @@ export function PublishStep({ editor, ctx }: StepProps) {
     }
   };
 
+  const heroUrl = final.person.photo?.src ? ctx.urlFor(final.person.photo.src) : undefined;
+  const domain = (c.site.url || "tu-nombre.netlify.app").replace(/^https?:\/\//, "").replace(/\/$/, "");
+
   return (
     <div className="flex flex-col gap-5">
-      <Card title="Revisión final" description="Un repaso rápido antes de publicar.">
+      <Card title="Revisión final" description="Un repaso rápido antes de publicar. Toca «Completar» para ir directo a lo que falta.">
         <ul className="flex flex-col gap-2">
           {checks.map((k) => (
-            <li key={k.text} className="flex gap-3 rounded-xl bg-paper px-4 py-3">
-              <span
-                aria-hidden="true"
-                className={`mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full text-[0.8125rem] font-bold ${
-                  k.ok ? "bg-emerald-500 text-white" : k.required ? "bg-red-500 text-white" : "bg-amber-400 text-ink"
-                }`}
-              >
-                {k.ok ? "✓" : "!"}
-              </span>
-              <span>
+            <li key={k.text} className="flex items-center gap-3 rounded-xl bg-paper px-4 py-3">
+              <Status ok={k.ok} required={k.required} />
+              <span className="flex-1">
                 <span className="block text-[0.9375rem] font-semibold text-ink">
                   {k.text}
                   <span className="sr-only">{k.ok ? ": listo" : k.required ? ": falta (obligatorio)" : ": recomendado"}</span>
                 </span>
                 {!k.ok && <span className="block text-[0.8125rem] text-ink/60">{k.fix}</span>}
               </span>
+              {!k.ok && <GoTo onClick={() => editor.setStep(k.step)} />}
+            </li>
+          ))}
+          {emptySections.map((id) => (
+            <li key={id} className="flex items-center gap-3 rounded-xl bg-paper px-4 py-3">
+              <Status ok={false} />
+              <span className="flex-1">
+                <span className="block text-[0.9375rem] font-semibold text-ink">«{sectionNames[id]}» está vacía</span>
+                <span className="block text-[0.8125rem] text-ink/60">
+                  Está activada, pero no se verá hasta que le agregues contenido en «{STEP_FOR_SECTION[id].name}».
+                </span>
+              </span>
+              <GoTo onClick={() => editor.setStep(STEP_FOR_SECTION[id].step)} />
             </li>
           ))}
           {errors.map((e) => (
@@ -95,31 +112,22 @@ export function PublishStep({ editor, ctx }: StepProps) {
         {blocking && <p className="text-[0.875rem] font-semibold text-red-600">Completa lo marcado en rojo para poder descargar.</p>}
         {done && (
           <p className="rounded-xl bg-emerald-50 px-4 py-3 text-[0.9375rem] font-semibold text-emerald-800">
-            ¡Listo! Revisa tu carpeta de Descargas y sigue los 3 pasos de abajo.
+            ¡Listo! Revisa tu carpeta de Descargas y sigue los pasos de abajo.
           </p>
         )}
       </Card>
 
       <Card title="Publícalo gratis en 3 pasos">
         <ol className="flex flex-col gap-4">
-          <li className="flex gap-4">
-            <span aria-hidden="true" className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink text-[0.9375rem] font-bold text-white">1</span>
-            <span className="text-[0.9375rem] leading-relaxed text-ink">
-              <strong>Descomprime la carpeta.</strong> En tu carpeta de Descargas, haz doble clic en <em>mi-portfolio….zip</em>. Aparece una carpeta con el mismo nombre.
-            </span>
-          </li>
-          <li className="flex gap-4">
-            <span aria-hidden="true" className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink text-[0.9375rem] font-bold text-white">2</span>
-            <span className="text-[0.9375rem] leading-relaxed text-ink">
-              <strong>Crea tu cuenta gratis en Netlify</strong> con tu correo o con Google. Es el servicio que pone tu portfolio en internet.
-            </span>
-          </li>
-          <li className="flex gap-4">
-            <span aria-hidden="true" className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink text-[0.9375rem] font-bold text-white">3</span>
-            <span className="text-[0.9375rem] leading-relaxed text-ink">
-              <strong>Arrastra la carpeta</strong> a la página de Netlify Drop. En unos segundos te da la dirección de tu portfolio. ¡Ya está publicado!
-            </span>
-          </li>
+          <StepItem n={1}>
+            <strong>Descomprime la carpeta.</strong> En tu carpeta de Descargas, haz doble clic en <em>mi-portfolio….zip</em>. Aparece una carpeta con el mismo nombre.
+          </StepItem>
+          <StepItem n={2}>
+            <strong>Crea tu cuenta gratis en Netlify</strong> con tu correo o con Google. Es el servicio que pone tu portfolio en internet.
+          </StepItem>
+          <StepItem n={3}>
+            <strong>Arrastra la carpeta</strong> a la página de Netlify Drop. En unos segundos te da la dirección de tu portfolio. ¡Ya está publicado!
+          </StepItem>
         </ol>
         <a
           href="https://app.netlify.com/drop"
@@ -134,10 +142,22 @@ export function PublishStep({ editor, ctx }: StepProps) {
         </Tip>
       </Card>
 
-      <Card title="¿Ya tienes la dirección de tu portfolio?" description="Opcional. Ayuda a que Google y las redes muestren bien tu enlace. Después de escribirla, descarga y publica otra vez.">
+      <Card
+        title="Opcional: que tu enlace se vea bonito al compartirlo"
+        description="Haz esto después de publicar. Cuando compartas tu portfolio por WhatsApp o redes, aparecerá una tarjeta con tu foto y tu nombre, como esta:"
+      >
+        <div className="flex max-w-sm overflow-hidden rounded-xl border border-line bg-[#f0f2f5]" aria-hidden="true">
+          <div className="h-20 w-20 shrink-0 bg-ink/10 bg-cover bg-center" style={heroUrl ? { backgroundImage: `url(${heroUrl})` } : undefined} />
+          <div className="min-w-0 p-3">
+            <p className="truncate text-[0.8125rem] font-bold text-ink">{final.site.title}</p>
+            <p className="line-clamp-2 text-[0.75rem] text-ink/60">{final.site.description}</p>
+            <p className="mt-1 truncate text-[0.6875rem] text-ink/45">{domain}</p>
+          </div>
+        </div>
         <Field
-          label="Dirección de tu portfolio"
+          label="Pega aquí la dirección que te dio Netlify"
           type="url"
+          hint="Después de pegarla, descarga tu portfolio otra vez y arrástralo de nuevo a Netlify (en Deploys)."
           value={c.site.url}
           onChange={(v) => editor.update((d) => void (d.site.url = v.trim()))}
           placeholder="https://tu-nombre.netlify.app"
@@ -145,5 +165,41 @@ export function PublishStep({ editor, ctx }: StepProps) {
         />
       </Card>
     </div>
+  );
+}
+
+function Status({ ok, required }: { ok: boolean; required?: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`grid h-6 w-6 shrink-0 place-items-center rounded-full text-[0.8125rem] font-bold ${
+        ok ? "bg-emerald-500 text-white" : required ? "bg-red-500 text-white" : "bg-amber-400 text-ink"
+      }`}
+    >
+      {ok ? "✓" : "!"}
+    </span>
+  );
+}
+
+function GoTo({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="min-h-10 shrink-0 rounded-lg bg-white px-3 text-[0.8125rem] font-bold text-brand shadow-sm transition hover:bg-brand hover:text-white"
+    >
+      Completar →
+    </button>
+  );
+}
+
+function StepItem({ n, children }: { n: number; children: React.ReactNode }) {
+  return (
+    <li className="flex gap-4">
+      <span aria-hidden="true" className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink text-[0.9375rem] font-bold text-white">
+        {n}
+      </span>
+      <span className="text-[0.9375rem] leading-relaxed text-ink">{children}</span>
+    </li>
   );
 }

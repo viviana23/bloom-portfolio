@@ -3,9 +3,12 @@ import { palettes, paletteNames, styles, type PaletteName, type StyleName } from
 import type { PortfolioConfig, SectionId } from "../../../src/lib/types";
 import { professions } from "../professions";
 import { Card, Tip } from "../ui/fields";
-import type { StepProps } from "./shared";
+import { createContent } from "../../../src/lib/content";
+import { cleanConfig } from "../finalize";
+import { ImportCard } from "./ImportCard";
+import { STEP_FOR_SECTION, type StepProps } from "./shared";
 
-export function StartStep({ editor }: StepProps) {
+export function StartStep({ editor, ctx }: StepProps) {
   const current = editor.state!.professionId;
   const folder = useRef<HTMLInputElement>(null);
 
@@ -34,6 +37,7 @@ export function StartStep({ editor }: StepProps) {
 
   return (
     <div className="flex flex-col gap-5">
+      <ImportCard editor={editor} ctx={ctx} />
       <Card title="¿A qué te dedicas?" description="Elegimos para ti el estilo, los colores y las secciones que mejor funcionan en tu oficio. Después puedes cambiar todo.">
         <ul className="grid gap-2 sm:grid-cols-2">
           {professions.map((p) => {
@@ -126,6 +130,7 @@ export function StyleStep({ editor }: StepProps) {
   const style = c.theme.style ?? "divertido";
   const palette = c.theme.palette ?? "fresa";
   const order = Object.keys(c.sections) as SectionId[];
+  const empty = new Set(createContent(cleanConfig(c)).emptySections);
 
   const move = (i: number, dir: -1 | 1) =>
     update((d) => {
@@ -200,7 +205,18 @@ export function StyleStep({ editor }: StepProps) {
         <ol className="flex flex-col gap-2">
           {order.map((id, i) => (
             <li key={id} className="flex items-center gap-2 rounded-xl border border-line bg-paper py-1 pl-4 pr-1">
-              <span className={`flex-1 text-[0.9375rem] font-semibold ${c.sections[id] ? "text-ink" : "text-ink/40 line-through"}`}>{sectionNames[id]}</span>
+              <span className="flex flex-1 flex-col py-1">
+                <span className={`text-[0.9375rem] font-semibold ${c.sections[id] ? "text-ink" : "text-ink/40 line-through"}`}>{sectionNames[id]}</span>
+                {empty.has(id) && (
+                  <button
+                    type="button"
+                    onClick={() => editor.setStep(STEP_FOR_SECTION[id].step)}
+                    className="self-start text-left text-[0.75rem] font-semibold text-amber-700 hover:underline"
+                  >
+                    Vacía: no se verá hasta que la llenes · Completar en «{STEP_FOR_SECTION[id].name}» →
+                  </button>
+                )}
+              </span>
               <button
                 type="button"
                 onClick={() => update((d) => void (d.sections[id] = !d.sections[id]))}
@@ -213,7 +229,7 @@ export function StyleStep({ editor }: StepProps) {
             </li>
           ))}
         </ol>
-        <Tip>En la computadora, el menú muestra las 4 primeras secciones; el resto queda en "Más".</Tip>
+        <Tip>Una sección solo aparece en tu portfolio si está visible y tiene contenido. En la computadora, el menú muestra las 4 primeras; el resto queda en "Más".</Tip>
       </Card>
     </div>
   );

@@ -136,6 +136,16 @@ export function EditorApp() {
               <p className="mt-1 text-[0.9375rem] text-ink/60">{intro}</p>
             </div>
 
+            {editor.notice && (
+              <div role="status" className="flex items-start gap-3 rounded-2xl bg-emerald-50 px-5 py-4 text-[0.9375rem] text-emerald-900">
+                <span aria-hidden="true" className="mt-0.5 text-lg">✓</span>
+                <p className="flex-1 leading-relaxed">{editor.notice}</p>
+                <button type="button" onClick={() => editor.setNotice(null)} aria-label="Cerrar aviso" className="grid h-9 w-9 shrink-0 place-items-center rounded-lg hover:bg-emerald-100">
+                  ✕
+                </button>
+              </div>
+            )}
+
             <Step editor={editor} ctx={ctx} prof={prof} />
 
             <div className="flex items-center justify-between gap-3 pt-2">

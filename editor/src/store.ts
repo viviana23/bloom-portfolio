@@ -78,6 +78,8 @@ export function useEditor() {
   const [state, setState] = useState<EditorState | null>(null);
   const [images, setImages] = useState<Map<string, Blob>>(new Map());
   const [saved, setSaved] = useState(true);
+  /** Mensaje temporal arriba del formulario (ej. lo que llenó la IA). */
+  const [notice, setNotice] = useState<string | null>(null);
   const loaded = useRef(false);
 
   // Cargar lo guardado
@@ -122,7 +124,10 @@ export function useEditor() {
     });
   }, []);
 
-  const setStep = useCallback((step: number) => setState((s) => (s ? { ...s, step } : s)), []);
+  const setStep = useCallback((step: number) => {
+    setNotice(null);
+    setState((s) => (s ? { ...s, step } : s));
+  }, []);
 
   const chooseProfession = useCallback((prof: Profession) => {
     setState((s) => {
@@ -146,6 +151,19 @@ export function useEditor() {
     setState({ config: blankConfig(findProfession("inicio")!), step: 0 });
   }, []);
 
+  /** Carga el contenido que trajo la IA (o un archivo) y aplica la profesión si viene. */
+  const loadImported = useCallback((config: PortfolioConfig, professionId?: string, summary?: string) => {
+    setNotice(summary ?? "¡Listo! Cargamos tu portfolio. Revisa cada paso.");
+    setState((s) => {
+      const prof = findProfession(professionId);
+      return {
+        step: 1,
+        professionId: prof?.id ?? s?.professionId,
+        config: prof ? applyProfession(config, prof) : config,
+      };
+    });
+  }, []);
+
   /** Carga un portfolio descargado antes (su archivo mi-portfolio.json y sus fotos). */
   const importPortfolio = useCallback(async (config: PortfolioConfig, photos: Map<string, Blob>) => {
     for (const [path, blob] of photos) await db.set(IMG_PREFIX + path, blob);
@@ -153,7 +171,7 @@ export function useEditor() {
     setState((s) => ({ step: 1, professionId: s?.professionId, config }));
   }, []);
 
-  return { state, images, saved, update, setStep, chooseProfession, addImage, reset, importPortfolio };
+  return { state, images, saved, notice, setNotice, update, setStep, chooseProfession, addImage, reset, importPortfolio, loadImported };
 }
 
 export type Editor = ReturnType<typeof useEditor>;
