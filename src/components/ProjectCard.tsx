@@ -125,13 +125,13 @@ function ProjectRowPro({ project, index }: { project: ResolvedProject; index: nu
             ))}
           </ul>
         )}
-        <div className="relative z-10 mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.9375rem] font-semibold">
+        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.9375rem] font-semibold">
           <span aria-hidden="true" className="inline-flex items-center gap-1.5 text-accent">
             {labels.viewProject}
             <ArrowUpRight className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </span>
           {project.links?.map((l) => (
-            <SmartLink key={l.url} link={l} className="link-underline inline-flex min-h-11 items-center gap-1 text-fg" />
+            <SmartLink key={l.url} link={l} className="link-underline relative z-10 inline-flex min-h-11 items-center gap-1 text-fg" />
           ))}
         </div>
       </div>
