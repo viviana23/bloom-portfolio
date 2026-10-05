@@ -2,7 +2,10 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ComponentType }
 import { cleanConfig } from "./finalize";
 import { findProfession } from "./professions";
 import { useEditor } from "./store";
-import type { PreviewMessage } from "./preview";
+import type { EditorMessage, PreviewMessage } from "./preview";
+import { sectionAnchor } from "../../src/lib/content";
+import type { SectionId } from "../../src/lib/types";
+import { STEP_FOR_SECTION } from "./steps/shared";
 import { AboutStep, ContactStep } from "./steps/AboutContact";
 import { PublishStep } from "./steps/PublishStep";
 import type { StepProps } from "./steps/shared";
@@ -51,11 +54,29 @@ export function EditorApp() {
     iframe.current?.contentWindow?.postMessage(msg, location.origin);
   }, []);
 
+  // Al tocar "Editar" en la vista previa: ir al paso y al bloque correspondiente.
+  const pendingCard = useRef<string | null>(null);
+  const goToSection = useCallback(
+    (anchor: string) => {
+      const id = (Object.keys(sectionAnchor) as SectionId[]).find((k) => sectionAnchor[k] === anchor);
+      const step = anchor === "inicio" ? 1 : id ? STEP_FOR_SECTION[id].step : null;
+      if (step === null) return;
+      pendingCard.current = `card-${anchor}`;
+      setMobileView("edit");
+      editor.setStep(step);
+    },
+    [editor.setStep],
+  );
+
   useEffect(() => {
-    const onMsg = (e: MessageEvent) => e.origin === location.origin && e.data?.type === "preview-ready" && setReady(true);
+    const onMsg = (e: MessageEvent<EditorMessage>) => {
+      if (e.origin !== location.origin) return;
+      if (e.data?.type === "preview-ready") setReady(true);
+      if (e.data?.type === "edit") goToSection(e.data.anchor);
+    };
     window.addEventListener("message", onMsg);
     return () => window.removeEventListener("message", onMsg);
-  }, []);
+  }, [goToSection]);
 
   // Enviar la configuración a la vista previa (con un pequeño respiro mientras escribe)
   useEffect(() => {
@@ -67,6 +88,19 @@ export function EditorApp() {
   // Al cambiar de paso, la vista previa va a la sección correspondiente
   const step = state?.step ?? 0;
   useEffect(() => {
+    const card = pendingCard.current;
+    if (card) {
+      // Venimos de "Editar" en la vista previa: mostrar y resaltar ese bloque.
+      pendingCard.current = null;
+      setTimeout(() => {
+        const el = document.getElementById(card);
+        if (!el) return;
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        el.style.boxShadow = "0 0 0 4px rgba(124, 58, 237, 0.45)";
+        setTimeout(() => (el.style.boxShadow = ""), 1600);
+      }, 120);
+      return;
+    }
     if (ready) send({ type: "scrollTo", anchor: steps[step]!.anchor });
     formTop.current?.scrollTo({ top: 0 });
     window.scrollTo({ top: 0 });
@@ -108,13 +142,16 @@ export function EditorApp() {
           className={`w-full overflow-y-auto pb-28 lg:w-[min(46%,40rem)] lg:shrink-0 lg:border-r lg:border-line lg:pb-10 ${mobileView === "preview" ? "hidden lg:block" : ""}`}
         >
           <nav aria-label="Pasos" className="sticky top-0 z-10 border-b border-line bg-white/95 px-4 py-3 backdrop-blur md:px-6">
-            <ol className="flex gap-1.5 overflow-x-auto pb-1">
+            <ol className="flex gap-1.5 overflow-x-auto pb-1 lg:flex-wrap lg:overflow-visible lg:pb-0">
               {steps.map((s, i) => (
                 <li key={s.title}>
                   <button
                     type="button"
                     onClick={() => go(i)}
                     aria-current={i === step ? "step" : undefined}
+                    ref={(el) => {
+                      if (el && i === step) el.scrollIntoView({ block: "nearest", inline: "center" });
+                    }}
                     className={`flex min-h-10 items-center gap-2 whitespace-nowrap rounded-full px-3 text-[0.8125rem] font-semibold transition ${
                       i === step ? "bg-ink text-white" : i < step ? "text-ink hover:bg-ink/5" : "text-ink/45 hover:bg-ink/5"
                     }`}
@@ -226,7 +263,9 @@ function PreviewPanel({
       className={`flex min-h-0 flex-1 flex-col bg-[#ece8f3] ${hiddenOnMobile ? "hidden lg:flex" : "flex h-[calc(100dvh-4rem-4.5rem)] lg:h-auto"}`}
     >
       <div className="hidden items-center justify-between gap-3 px-4 pt-3 sm:flex">
-        <p className="text-[0.8125rem] font-semibold text-ink/60">Vista previa en vivo</p>
+        <p className="text-[0.8125rem] font-semibold text-ink/60">
+          Vista previa en vivo · <span className="font-normal">pasa el cursor sobre una sección y toca «Editar»</span>
+        </p>
         <div role="group" aria-label="Ver como" className="flex rounded-full bg-white p-1 shadow-sm">
           {(["desktop", "mobile"] as const).map((d) => (
             <button

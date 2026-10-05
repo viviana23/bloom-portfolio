@@ -201,7 +201,7 @@ export function StyleStep({ editor }: StepProps) {
         )}
       </Card>
 
-      <Card title="Orden de las secciones" description="Sube o baja cada sección. Las que están ocultas no se ven en tu portfolio.">
+      <Card id="card-orden" title="Orden de las secciones" description="Sube o baja cada sección. Las que están ocultas no se ven en tu portfolio.">
         <ol className="flex flex-col gap-2">
           {order.map((id, i) => (
             <li key={id} className="flex items-center gap-2 rounded-xl border border-line bg-paper py-1 pl-4 pr-1">
@@ -229,6 +229,18 @@ export function StyleStep({ editor }: StepProps) {
             </li>
           ))}
         </ol>
+        <button
+          type="button"
+          onClick={() =>
+            editor.update((d) => {
+              const recommended: SectionId[] = ["projects", "gallery", "about", "services", "testimonials", "skills", "lab", "experience", "education", "contact"];
+              d.sections = Object.fromEntries(recommended.map((k) => [k, d.sections[k] ?? false]));
+            })
+          }
+          className="self-start text-[0.8125rem] font-semibold text-brand hover:underline"
+        >
+          Volver al orden recomendado
+        </button>
         <Tip>Una sección solo aparece en tu portfolio si está visible y tiene contenido. En la computadora, el menú muestra las 4 primeras; el resto queda en "Más".</Tip>
       </Card>
     </div>

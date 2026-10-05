@@ -18,6 +18,9 @@ export type PreviewMessage =
   | { type: "config"; config: PortfolioConfig; images: Record<string, string> }
   | { type: "scrollTo"; anchor: string };
 
+/** Mensajes de la vista previa al editor. */
+export type EditorMessage = { type: "preview-ready" } | { type: "edit"; anchor: string };
+
 setSrcsetEnabled(false);
 const root = createRoot(document.getElementById("root")!);
 let userPickedTheme = false;
@@ -66,4 +69,57 @@ window.addEventListener("message", (e: MessageEvent<PreviewMessage>) => {
   }
 });
 
-window.parent.postMessage({ type: "preview-ready" }, location.origin);
+// ── Botón "Editar": al pasar sobre una sección, lleva al lugar del formulario ──
+const SECTION_SELECTOR = "#inicio, main section[id], section#contacto";
+const editBtn = document.createElement("button");
+editBtn.type = "button";
+editBtn.textContent = "✎ Editar esta sección";
+editBtn.setAttribute("aria-hidden", "true");
+editBtn.tabIndex = -1;
+Object.assign(editBtn.style, {
+  position: "fixed",
+  zIndex: "60",
+  display: "none",
+  padding: "14px 24px",
+  borderRadius: "999px",
+  border: "0",
+  background: "#7c3aed",
+  color: "#fff",
+  font: "700 18px/1 system-ui, -apple-system, sans-serif",
+  boxShadow: "0 8px 24px rgba(124, 58, 237, 0.4)",
+  cursor: "pointer",
+} satisfies Partial<CSSStyleDeclaration>);
+document.body.appendChild(editBtn);
+
+let current: HTMLElement | null = null;
+function placeButton() {
+  if (!current) return void (editBtn.style.display = "none");
+  const r = current.getBoundingClientRect();
+  if (r.bottom < 90 || r.top > innerHeight) return void (editBtn.style.display = "none");
+  editBtn.style.display = "block";
+  editBtn.style.top = `${Math.max(88, r.top + 16)}px`;
+  editBtn.style.right = "20px";
+  current.style.outline = "2px dashed rgba(124, 58, 237, 0.55)";
+  current.style.outlineOffset = "-6px";
+}
+function setCurrent(el: HTMLElement | null) {
+  if (el === current) return placeButton();
+  if (current) current.style.outline = "";
+  current = el;
+  placeButton();
+}
+const sectionAt = (target: EventTarget | null) =>
+  (target instanceof Element ? target.closest<HTMLElement>(SECTION_SELECTOR) : null);
+
+document.addEventListener("mouseover", (e) => {
+  if (e.target === editBtn) return;
+  setCurrent(sectionAt(e.target));
+});
+document.addEventListener("touchstart", (e) => setCurrent(sectionAt(e.target)), { passive: true });
+document.documentElement.addEventListener("mouseleave", () => setCurrent(null));
+addEventListener("scroll", placeButton, { passive: true });
+editBtn.addEventListener("click", () => {
+  if (current?.id) window.parent.postMessage({ type: "edit", anchor: current.id } satisfies EditorMessage, location.origin);
+});
+
+window.parent.postMessage({ type: "preview-ready" } satisfies EditorMessage, location.origin);

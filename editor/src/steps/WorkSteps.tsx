@@ -38,6 +38,7 @@ export function WorkStep({ editor, ctx }: StepProps) {
   return (
     <div className="flex flex-col gap-5">
       <Card
+        id="card-proyectos"
         title="Proyectos destacados"
         description="Tus mejores trabajos, contados con su historia: el reto, lo que hiciste y el resultado. Con 1 a 3 es suficiente."
         {...sectionSwitch(editor, "projects")}
@@ -76,7 +77,7 @@ export function WorkStep({ editor, ctx }: StepProps) {
         />
       </Card>
 
-      <Card title="Galería" description="Tus mejores fotos en un mosaico. Puedes subir varias a la vez." {...sectionSwitch(editor, "gallery")}>
+      <Card id="card-galeria" title="Galería" description="Tus mejores fotos en un mosaico. Puedes subir varias a la vez." {...sectionSwitch(editor, "gallery")}>
         {gallery.length > 0 && (
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {gallery.map((g, i) => (
@@ -131,7 +132,7 @@ export function OfferStep({ editor }: StepProps) {
   const update = editor.update;
   return (
     <div className="flex flex-col gap-5">
-      <Card title="Servicios o productos" description="Lo que ofreces, con o sin precio. Cada uno tiene un botón para que te escriban." {...sectionSwitch(editor, "services")}>
+      <Card id="card-servicios" title="Servicios o productos" description="Lo que ofreces, con o sin precio. Cada uno tiene un botón para que te escriban." {...sectionSwitch(editor, "services")}>
         <ListEditor<Service>
           items={c.services?.items ?? []}
           onChange={(items) => update((d) => void (d.services = { ...d.services, items }))}
@@ -151,7 +152,7 @@ export function OfferStep({ editor }: StepProps) {
         />
       </Card>
 
-      <Card title="Testimonios" description="Comentarios de clientes. Usa solo comentarios reales y pide permiso antes de publicarlos." {...sectionSwitch(editor, "testimonials")}>
+      <Card id="card-testimonios" title="Testimonios" description="Comentarios de clientes. Usa solo comentarios reales y pide permiso antes de publicarlos." {...sectionSwitch(editor, "testimonials")}>
         <ListEditor<Testimonial>
           items={c.testimonials?.items ?? []}
           onChange={(items) => update((d) => void (d.testimonials = { ...d.testimonials, items }))}
@@ -181,7 +182,7 @@ export function TrajectoryStep({ editor }: StepProps) {
     <div className="flex flex-col gap-5">
       <Tip>Todo en este paso es opcional. Si estás empezando, "En proceso" es tu mejor aliada: muestra lo que aprendes y lo que buscas.</Tip>
 
-      <Card title="En proceso" description="Lo que estás aprendiendo, probando y las oportunidades que buscas." {...sectionSwitch(editor, "lab")}>
+      <Card id="card-laboratorio" title="En proceso" description="Lo que estás aprendiendo, probando y las oportunidades que buscas." {...sectionSwitch(editor, "lab")}>
         <TextArea
           label="¿Qué oportunidades buscas hoy?"
           hint="Se muestra destacado, con un botón para que te escriban."
@@ -211,7 +212,7 @@ export function TrajectoryStep({ editor }: StepProps) {
         />
       </Card>
 
-      <Card title="Habilidades" description="Agrupadas por tema: técnicas, herramientas, idiomas…" {...sectionSwitch(editor, "skills")}>
+      <Card id="card-habilidades" title="Habilidades" description="Agrupadas por tema: técnicas, herramientas, idiomas…" {...sectionSwitch(editor, "skills")}>
         <ListEditor
           items={c.skills?.groups ?? []}
           onChange={(groups) => update((d) => void (d.skills = { ...d.skills, groups }))}
@@ -234,7 +235,7 @@ export function TrajectoryStep({ editor }: StepProps) {
         />
       </Card>
 
-      <Card title="Experiencia" description="Trabajos anteriores o tu propio negocio." {...sectionSwitch(editor, "experience")}>
+      <Card id="card-experiencia" title="Experiencia" description="Trabajos anteriores o tu propio negocio." {...sectionSwitch(editor, "experience")}>
         <ListEditor<ExperienceItem>
           items={c.experience?.items ?? []}
           onChange={(items) => update((d) => void (d.experience = { ...d.experience, items }))}
@@ -256,7 +257,7 @@ export function TrajectoryStep({ editor }: StepProps) {
         />
       </Card>
 
-      <Card title="Formación" description="Estudios, cursos y certificaciones." {...sectionSwitch(editor, "education")}>
+      <Card id="card-formacion" title="Formación" description="Estudios, cursos y certificaciones." {...sectionSwitch(editor, "education")}>
         <ListEditor<EducationItem>
           items={c.education?.items ?? []}
           onChange={(items) => update((d) => void (d.education = { ...d.education, items }))}

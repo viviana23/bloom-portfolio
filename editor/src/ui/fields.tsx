@@ -151,12 +151,15 @@ export function Toggle({
 
 /** Bloque de una sección, con su interruptor "Mostrar en mi portfolio". */
 export function Card({
+  id,
   title,
   description,
   shown,
   onShownChange,
   children,
 }: {
+  /** Ancla para saltar a este bloque desde la vista previa (ej. "card-proyectos"). */
+  id?: string;
   title: string;
   description?: string;
   shown?: boolean;
@@ -164,7 +167,7 @@ export function Card({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-line bg-white p-5 shadow-sm md:p-6">
+    <section id={id} className="scroll-mt-36 rounded-2xl border border-line bg-white p-5 shadow-sm transition-shadow duration-700 md:p-6">
       <div className="mb-4 flex items-start justify-between gap-4">
         <div>
           <h3 className="text-[1.0625rem] font-bold text-ink">{title}</h3>

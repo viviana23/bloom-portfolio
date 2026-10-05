@@ -20,23 +20,23 @@ export interface Profession {
   labels?: Partial<Labels>;
 }
 
-/** Secciones activas y su orden según el tipo de trabajo. */
-const sectionsByKind: Record<Kind, SectionId[]> = {
-  visual: ["projects", "gallery", "about", "services", "testimonials", "contact"],
-  servicios: ["about", "services", "projects", "testimonials", "education", "contact"],
-  carrera: ["projects", "about", "skills", "experience", "education", "lab", "contact"],
-  inicio: ["projects", "about", "lab", "skills", "education", "contact"],
-};
-
+/** Orden único de las secciones (el de la plantilla). La profesión solo decide cuáles se encienden. */
 const ALL_SECTIONS: SectionId[] = [
   "projects", "gallery", "about", "services", "testimonials", "skills", "lab", "experience", "education", "contact",
 ];
 
+/** Secciones encendidas según el tipo de trabajo. */
+const sectionsByKind: Record<Kind, SectionId[]> = {
+  visual: ["projects", "gallery", "about", "services", "testimonials", "contact"],
+  servicios: ["projects", "about", "services", "testimonials", "education", "contact"],
+  carrera: ["projects", "about", "skills", "lab", "experience", "education", "contact"],
+  inicio: ["projects", "about", "skills", "lab", "education", "contact"],
+};
+
 export function sectionsFor(kind: Kind): PortfolioConfig["sections"] {
   const on = sectionsByKind[kind];
   const sections: PortfolioConfig["sections"] = {};
-  for (const id of on) sections[id] = true;
-  for (const id of ALL_SECTIONS) if (!on.includes(id)) sections[id] = false;
+  for (const id of ALL_SECTIONS) sections[id] = on.includes(id);
   return sections;
 }
 

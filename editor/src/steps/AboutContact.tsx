@@ -11,7 +11,7 @@ export function AboutStep({ editor, ctx, prof }: StepProps) {
 
   return (
     <div className="flex flex-col gap-5">
-      <Card title="Tu presentación" description="Es lo primero que ven: tu nombre, a qué te dedicas y una frase que te represente.">
+      <Card id="card-inicio" title="Tu presentación" description="Es lo primero que ven: tu nombre, a qué te dedicas y una frase que te represente.">
         <Field label="Tu nombre" value={c.person.name} onChange={(v) => update((d) => void (d.person.name = v))} placeholder="Ej. Camila Ortega" />
         <Field
           label="A qué te dedicas"
@@ -59,7 +59,7 @@ export function AboutStep({ editor, ctx, prof }: StepProps) {
         />
       </Card>
 
-      <Card title="Sobre mí" description="Cuéntales quién eres, en pocas líneas." {...sectionSwitch(editor, "about")}>
+      <Card id="card-sobre-mi" title="Sobre mí" description="Cuéntales quién eres, en pocas líneas." {...sectionSwitch(editor, "about")}>
         <TextArea
           label="Primer párrafo"
           hint="Quién eres y qué haces. Se muestra en letra grande."
@@ -137,7 +137,7 @@ export function ContactStep({ editor, ctx }: StepProps) {
 
   return (
     <div className="flex flex-col gap-5">
-      <Card title="¿Cómo te contactan?" description="Con tu WhatsApp, todos los botones abren un chat con un mensaje ya escrito.">
+      <Card id="card-contacto-datos" title="¿Cómo te contactan?" description="Con tu WhatsApp, todos los botones abren un chat con un mensaje ya escrito.">
         <div className="flex flex-col gap-1.5">
           <span className="text-[0.875rem] font-semibold text-ink">Tu WhatsApp</span>
           <div className="flex gap-2">
@@ -176,7 +176,7 @@ export function ContactStep({ editor, ctx }: StepProps) {
         />
       </Card>
 
-      <Card title="Tus redes" description="Pega el enlace de tu perfil. Deja vacías las que no uses.">
+      <Card id="card-redes" title="Tus redes" description="Pega el enlace de tu perfil. Deja vacías las que no uses.">
         {networks.map((n) => (
           <Field
             key={n.label}
@@ -197,7 +197,7 @@ export function ContactStep({ editor, ctx }: StepProps) {
         <Tip>Para copiar el enlace, abre tu perfil en el navegador y copia la dirección de arriba.</Tip>
       </Card>
 
-      <Card title="Mensaje de cierre" description="La última sección de tu portfolio: una invitación a escribirte." {...sectionSwitch(editor, "contact")}>
+      <Card id="card-contacto" title="Mensaje de cierre" description="La última sección de tu portfolio: una invitación a escribirte." {...sectionSwitch(editor, "contact")}>
         <Field
           label="Título"
           hint="Usa *asteriscos* para destacar una palabra."
