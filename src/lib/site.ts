@@ -229,7 +229,9 @@ export function headTags(config: PortfolioConfig): string {
   const { site, person } = config;
   const theme = resolveTheme(config.theme);
   const url = site.url?.replace(/\/$/, "");
-  const image = absolute(url, site.ogImage);
+  // Sin dominio usamos la ruta relativa: WhatsApp, Telegram, iMessage, Slack y Discord
+  // la resuelven solos. Con site.url queda absoluta, que es lo ideal para todas las redes.
+  const image = absolute(url, site.ogImage) ?? site.ogImage;
   const sameAs = config.links.map((l) => l.url).filter((u) => /^https?:\/\//.test(u));
 
   const jsonLd = {

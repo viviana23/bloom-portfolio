@@ -3,7 +3,7 @@ import { createContent, slugify } from "../../../src/lib/content";
 import { validateConfig } from "../../../src/lib/site";
 import { buildPortfolioZip, downloadBlob } from "../export";
 import { cleanConfig, usedImages } from "../finalize";
-import { Card, Field, Tip } from "../ui/fields";
+import { Card, Tip } from "../ui/fields";
 import { sectionNames } from "./StartStyle";
 import { STEP_FOR_SECTION, type StepProps } from "./shared";
 
@@ -54,8 +54,6 @@ export function PublishStep({ editor, ctx }: StepProps) {
     }
   };
 
-  const heroUrl = final.person.photo?.src ? ctx.urlFor(final.person.photo.src) : undefined;
-  const domain = (c.site.url || "tu-nombre.netlify.app").replace(/^https?:\/\//, "").replace(/\/$/, "");
 
   return (
     <div className="flex flex-col gap-5">
@@ -142,28 +140,6 @@ export function PublishStep({ editor, ctx }: StepProps) {
         </Tip>
       </Card>
 
-      <Card
-        title="Opcional: que tu enlace se vea bonito al compartirlo"
-        description="Haz esto después de publicar. Cuando compartas tu portfolio por WhatsApp o redes, aparecerá una tarjeta con tu foto y tu nombre, como esta:"
-      >
-        <div className="flex max-w-sm overflow-hidden rounded-xl border border-line bg-[#f0f2f5]" aria-hidden="true">
-          <div className="h-20 w-20 shrink-0 bg-ink/10 bg-cover bg-center" style={heroUrl ? { backgroundImage: `url(${heroUrl})` } : undefined} />
-          <div className="min-w-0 p-3">
-            <p className="truncate text-[0.8125rem] font-bold text-ink">{final.site.title}</p>
-            <p className="line-clamp-2 text-[0.75rem] text-ink/60">{final.site.description}</p>
-            <p className="mt-1 truncate text-[0.6875rem] text-ink/45">{domain}</p>
-          </div>
-        </div>
-        <Field
-          label="Pega aquí la dirección que te dio Netlify"
-          type="url"
-          hint="Después de pegarla, descarga tu portfolio otra vez y arrástralo de nuevo a Netlify (en Deploys)."
-          value={c.site.url}
-          onChange={(v) => editor.update((d) => void (d.site.url = v.trim()))}
-          placeholder="https://tu-nombre.netlify.app"
-          error={c.site.url && !/^https:\/\/[^/\s]+\.[^/\s]+/.test(c.site.url) ? 'Debe empezar por "https://".' : undefined}
-        />
-      </Card>
     </div>
   );
 }
