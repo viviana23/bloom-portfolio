@@ -83,7 +83,7 @@ export function Contact() {
               {!contact?.photo && (
               <span
                 aria-hidden="true"
-                className="sticker pop-in absolute -top-5 right-6 z-10 [--r:8deg] [--d:200ms]"
+                className="decor-playful sticker pop-in absolute -top-5 right-6 z-10 [--r:8deg] [--d:200ms]"
                 style={{ background: "var(--block-3)", color: "var(--on-block-3)", transform: "rotate(calc(8deg * var(--tilt)))" }}
               >
                 <Sparkle /> {labels.writeMe}

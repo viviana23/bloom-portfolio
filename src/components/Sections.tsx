@@ -9,15 +9,20 @@ const blockStyle = (n: number) => ({ background: `var(--block-${n})`, color: `va
 
 /* ── Sobre mí: bento ──────────────────────────────────────────── */
 export function About() {
-  const { config, labels } = useContent();
+  const { config, labels, contactLink } = useContent();
   const about = config.about!;
   const { person } = config;
+  // Sin foto, la tarjeta lateral muestra dónde estás, tu disponibilidad y un atajo para escribirte.
+  const cta = contactLink();
+  const hasSide = Boolean(about.photo || person.location || person.availability);
   const paragraphs = Array.isArray(about.text) ? about.text : [about.text];
   const points = about.points ?? [];
   return (
     <Section id="about" title={about.title ?? labels.titleAbout}>
       <div className="grid gap-4 md:grid-cols-6 md:gap-5">
-        <div className="tile flex flex-col gap-5 border-[length:var(--bw)] border-[color:var(--line)] bg-surface p-7 md:col-span-4 md:p-10">
+        <div
+          className={`tile flex flex-col gap-5 border-[length:var(--bw)] border-[color:var(--line)] bg-surface p-7 md:p-10 ${hasSide ? "md:col-span-4" : "md:col-span-6"}`}
+        >
           {paragraphs.map((p, i) => (
             <p
               key={i}
@@ -45,20 +50,22 @@ export function About() {
               </span>
             )}
           </div>
-        ) : (
+        ) : hasSide ? (
         <div className="tile flex flex-col justify-between gap-8 bg-fg p-7 text-bg md:col-span-2 md:p-8">
-          <Sparkle className="text-4xl text-accent" />
           <div>
-            {person.location && <p className="text-title text-[1.625rem] leading-tight">{person.location}</p>}
-            {person.availability && (
-              <p className="mt-3 inline-flex items-center gap-2 text-[0.9375rem] font-medium opacity-80">
-                <span aria-hidden="true" className="h-2 w-2 rounded-full bg-accent" />
-                {person.availability}
+            {person.location && (
+              <p className="inline-flex items-center gap-2 text-[0.9375rem] font-medium opacity-80">
+                <Sparkle aria-hidden="true" className="text-accent" />
+                {person.location}
               </p>
             )}
+            {person.availability && <p className="text-title mt-3 text-[1.625rem] leading-tight">{person.availability}</p>}
           </div>
+          {cta && (
+            <SmartLink link={cta} className="btn btn-primary group w-full" />
+          )}
         </div>
-        )}
+        ) : null}
 
         {points.map((pt, i) => (
           <div
