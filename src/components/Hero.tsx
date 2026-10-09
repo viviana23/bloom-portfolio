@@ -208,6 +208,7 @@ function Marquee({ items }: { items: string[] }) {
 /**
  * Portada del estilo "profesional": compacta, como un CV moderno.
  * Nombre, rol y frase a la izquierda; foto circular a la derecha; CV a la vista.
+ * En el celular, la foto va pequeña al lado del nombre.
  */
 function HeroPro() {
   const { config, linkIsAvailable } = useContent();
@@ -217,21 +218,25 @@ function HeroPro() {
 
   return (
     <section id="inicio" aria-labelledby="inicio-titulo">
-      <div className="container-page grid items-center gap-10 pb-16 pt-12 md:grid-cols-12 md:gap-12 md:pb-20 md:pt-20">
-        <div className="hero-item order-2 md:order-1 md:col-span-8">
-          {person.availability && (
-            <p className="mb-6 inline-flex items-center gap-2.5 rounded-full border-[length:var(--bw)] border-[color:var(--line)] px-3.5 py-1.5 text-[0.875rem] font-medium">
-              <span aria-hidden="true" className="relative flex h-2 w-2">
-                <span className="absolute inset-0 animate-ping rounded-full bg-accent opacity-50 [animation-duration:2.4s] [animation-iteration-count:3]" />
-                <span className="relative h-2 w-2 rounded-full bg-accent" />
-              </span>
-              {person.availability}
-            </p>
-          )}
-          <h1 id="inicio-titulo" className="text-display text-[clamp(2.5rem,6.5vw,4.5rem)] leading-[1.02]">
+      {/* Celular: foto al lado del nombre, como una tarjeta de presentación.
+          Computador: textos a la izquierda y foto grande a la derecha. */}
+      <div className="container-page grid grid-cols-[auto_1fr] items-center gap-x-4 pb-16 pt-8 [grid-template-areas:'foto_nombre'_'estado_estado'_'texto_texto'] md:grid-cols-[1fr_16rem] md:gap-x-12 md:pb-20 md:pt-20 md:[grid-template-areas:'estado_foto'_'nombre_foto'_'texto_foto']">
+        {person.availability && (
+          <p className="hero-item mt-6 inline-flex items-center gap-2.5 justify-self-start rounded-full border-[length:var(--bw)] border-[color:var(--line)] px-3.5 py-1.5 text-[0.875rem] font-medium [grid-area:estado] md:mb-6 md:mt-0 md:self-end">
+            <span aria-hidden="true" className="relative flex h-2 w-2">
+              <span className="absolute inset-0 animate-ping rounded-full bg-accent opacity-50 [animation-duration:2.4s] [animation-iteration-count:3]" />
+              <span className="relative h-2 w-2 rounded-full bg-accent" />
+            </span>
+            {person.availability}
+          </p>
+        )}
+        <div className="hero-item [grid-area:nombre]">
+          <h1 id="inicio-titulo" className="text-display text-[clamp(2.125rem,6.5vw,4.5rem)] leading-[1.02]">
             {person.name}
           </h1>
-          <p className="mt-3 text-[1.25rem] font-semibold text-accent md:text-[1.5rem]">{person.role}</p>
+          <p className="mt-2 text-[1.125rem] font-semibold leading-snug text-accent md:mt-3 md:text-[1.5rem]">{person.role}</p>
+        </div>
+        <div className="hero-item self-start [grid-area:texto]">
           <p className="rich mt-5 max-w-2xl text-[1.0625rem] leading-relaxed text-fg/80 md:text-[1.1875rem]">
             <Rich text={person.headline} />
           </p>
@@ -255,8 +260,8 @@ function HeroPro() {
           <SocialLinks links={links} className="mt-6" />
         </div>
 
-        <div className="hero-item order-1 md:order-2 md:col-span-4 md:justify-self-end [--d:120ms]">
-          <div className="grid aspect-square w-32 place-items-center overflow-hidden rounded-full border-[length:var(--bw)] border-[color:var(--line)] bg-surface md:w-64">
+        <div className="hero-item [grid-area:foto] md:justify-self-end [--d:120ms]">
+          <div className="grid aspect-square w-[5.5rem] place-items-center overflow-hidden rounded-full border-[length:var(--bw)] border-[color:var(--line)] bg-surface md:w-64">
             {person.photo ? (
               <img
                 src={person.photo.src}
